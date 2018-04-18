@@ -1,0 +1,5 @@
+D:\Coding\Git\csharp\Arsenal\MultiThread\bin\Debug\MultiThread.dll
+D:\Coding\Git\csharp\Arsenal\MultiThread\bin\Debug\MultiThread.pdb
+D:\Coding\Git\csharp\Arsenal\MultiThread\obj\Debug\MultiThread.csprojResolveAssemblyReference.cache
+D:\Coding\Git\csharp\Arsenal\MultiThread\obj\Debug\MultiThread.dll
+D:\Coding\Git\csharp\Arsenal\MultiThread\obj\Debug\MultiThread.pdb

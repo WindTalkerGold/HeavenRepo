@@ -1,0 +1,7 @@
+D:\Coding\Git\csharp\Arsenal\Arsenal\bin\Debug\Arsenal.exe.config
+D:\Coding\Git\csharp\Arsenal\Arsenal\bin\Debug\Arsenal.exe
+D:\Coding\Git\csharp\Arsenal\Arsenal\bin\Debug\Arsenal.pdb
+D:\Coding\Git\csharp\Arsenal\Arsenal\bin\Debug\MultiThread.dll
+D:\Coding\Git\csharp\Arsenal\Arsenal\bin\Debug\MultiThread.pdb
+D:\Coding\Git\csharp\Arsenal\Arsenal\obj\Debug\Arsenal.exe
+D:\Coding\Git\csharp\Arsenal\Arsenal\obj\Debug\Arsenal.pdb
