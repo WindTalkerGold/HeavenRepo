@@ -8,7 +8,7 @@ using namespace std;
 class Solution {
 private:
     map<string, int> processParentheses(const string& formula, int startIndex) {
-        // startIndex is (
+        // startIndex is '(' or -1
         map<string, int> elementsInside;
         int currentIndex = startIndex+1;
         string currentAtom;
