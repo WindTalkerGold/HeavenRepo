@@ -15,7 +15,7 @@ class Solution(object):
         
         checked_indexes = [set([-1])]
         unchecked_indexes = set(range(0, len(bank)))
-        print(unchecked_indexes)
+        
         for currentSteps in range(1, 9):
             checked_indexes.append(set([]))
             previousStep = currentSteps - 1
