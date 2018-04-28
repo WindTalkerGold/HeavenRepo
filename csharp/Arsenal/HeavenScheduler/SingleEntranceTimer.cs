@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Threading;
+using System.Timers;
 
 namespace Scheduling
 {
     public class SingleEntranceTimer : IDisposable
     {
         bool started;
-        private readonly Action<object> action;
+        private readonly Action action;
         private readonly int maxExecutionLimit;
         int executedTimes = 0;
         Timer timer;
@@ -14,15 +14,17 @@ namespace Scheduling
         volatile bool isRunning = false;
         private object locker = new object();
         
-        public SingleEntranceTimer(Action<object> action, TimeSpan interval, bool autoStart = false, int maxExecutionLimit = -1)
+        public SingleEntranceTimer(Action action, TimeSpan interval, bool autoStart = false, int maxExecutionLimit = -1)
         {
             this.started = autoStart;
             this.maxExecutionLimit = maxExecutionLimit;
 
             this.action = action;
 
-            timer = new Timer(null, null, TimeSpan.Zero, interval);
-                        
+            timer = new Timer();
+            timer.Interval = interval.Milliseconds;
+            timer.Elapsed += Execute;
+
             if (autoStart)
                 Start();
         }
@@ -32,6 +34,7 @@ namespace Scheduling
             if (started)
                 return;
 
+            timer.Enabled = true;
             started = true;
         }
 
@@ -40,6 +43,7 @@ namespace Scheduling
             if (!started)
                 return;
 
+            timer.Enabled = false;
             started = false;
         }
 
@@ -48,7 +52,7 @@ namespace Scheduling
             timer.Dispose();
         }
 
-        private void Execute(object obj)
+        private void Execute(object source, ElapsedEventArgs args)
         {
             if (maxExecutionLimit != -1 && executedTimes >= maxExecutionLimit)
             {
@@ -65,10 +69,11 @@ namespace Scheduling
                     return;
 
                 isRunning = true;
-                action(obj);
-                isRunning = false;
-                executedTimes++;
             }
+
+            executedTimes++;
+            action();
+            isRunning = false;
         }
     }
 }
