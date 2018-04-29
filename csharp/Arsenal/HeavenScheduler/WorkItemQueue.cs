@@ -10,6 +10,8 @@ namespace Scheduling
         {
             this.maxItemsCount = maxItems;
             this.logger = logger;
+            this.pendingWorkItems = new ConcurrentQueue<IWorkItem>();
+            this.runningWorkItems = new List<IWorkItem>();
         }
 
         private readonly int maxItemsCount;
@@ -21,13 +23,19 @@ namespace Scheduling
 
         public bool AddWorkItem(IWorkItem workItem)
         {
-            if (runningWorkItems.Count + pendingWorkItems.Count >= maxItemsCount)
+            if (ActiveItemsNum >= maxItemsCount)
                 return false;
 
             pendingWorkItems.Enqueue(workItem);
             logger.LogNewWorkItemAdded(workItem);
             return true;
         }
+
+        public int RunningItemsNum => runningWorkItems.Count;
+
+        public int PendingItemsNum => pendingWorkItems.Count;
+
+        public int ActiveItemsNum => RunningItemsNum + PendingItemsNum;
 
         public void Refresh()
         {
@@ -57,7 +65,6 @@ namespace Scheduling
             }
 
             runningWorkItems.RemoveAll(item => failedWorkItems.Contains(item) || completedWorkItems.Contains(item));
-
             ProcessFinishedItems(completedWorkItems.Concat(failedWorkItems));
         }
 

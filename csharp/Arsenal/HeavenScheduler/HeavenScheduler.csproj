@@ -40,9 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IWorkItem.cs" />
+    <Compile Include="LookupWorkItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingleEntranceTimer.cs" />
     <Compile Include="WorkItemProgress.cs" />
