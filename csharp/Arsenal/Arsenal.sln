@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiThread", "MultiThread\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arsenal", "Arsenal\Arsenal.csproj", "{1C1A3121-7C73-4E36-87E6-A873ED860095}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeavenScheduler", "HeavenScheduler\HeavenScheduler.csproj", "{6E9E5B55-4DCC-42CA-889B-87799638EC67}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4E6E2226-FAB3-443C-89B4-9F027E142CCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeavenSchedulerTests", "HeavenSchedulerTests\HeavenSchedulerTests.csproj", "{B2625C58-5305-4511-AFE1-45D8906622E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +27,19 @@ Global
 		{1C1A3121-7C73-4E36-87E6-A873ED860095}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C1A3121-7C73-4E36-87E6-A873ED860095}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C1A3121-7C73-4E36-87E6-A873ED860095}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E9E5B55-4DCC-42CA-889B-87799638EC67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E9E5B55-4DCC-42CA-889B-87799638EC67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E9E5B55-4DCC-42CA-889B-87799638EC67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E9E5B55-4DCC-42CA-889B-87799638EC67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2625C58-5305-4511-AFE1-45D8906622E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2625C58-5305-4511-AFE1-45D8906622E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2625C58-5305-4511-AFE1-45D8906622E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2625C58-5305-4511-AFE1-45D8906622E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B2625C58-5305-4511-AFE1-45D8906622E8} = {4E6E2226-FAB3-443C-89B4-9F027E142CCC}
 	EndGlobalSection
 EndGlobal

@@ -1,28 +1,40 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 
+using Timer = System.Timers.Timer;
 namespace Scheduling
 {
+    /// <summary>
+    /// A timer that allows at most one running instance to the action
+    /// Public methods of this class are not supposed to be invoked in multi thread context.
+    /// On each elasped, if the previous run is still not terminated yet, the new run will be skipped
+    /// </summary>
     public class SingleEntranceTimer : IDisposable
     {
-        bool started;
         private readonly Action action;
         private readonly int maxExecutionLimit;
-        int executedTimes = 0;
         Timer timer;
 
         volatile bool isRunning = false;
         private object locker = new object();
+
+        public bool Started => timer.Enabled;
         
+        public int NumExecuted { get; private set; }
+
+        private int numFired = 0;
+        public int NumFired => numFired;
+
         public SingleEntranceTimer(Action action, TimeSpan interval, bool autoStart = false, int maxExecutionLimit = -1)
         {
-            this.started = autoStart;
+            if (interval < TimeSpan.FromMilliseconds(1))
+                throw new ArgumentException("Must specify an interval at least 1 ms for the timer!");
+            this.action = action ?? throw new ArgumentNullException(nameof(action));
+
             this.maxExecutionLimit = maxExecutionLimit;
-
-            this.action = action;
-
-            timer = new Timer();
-            timer.Interval = interval.Milliseconds;
+            timer = new Timer(interval.TotalMilliseconds);
             timer.Elapsed += Execute;
 
             if (autoStart)
@@ -31,20 +43,12 @@ namespace Scheduling
         
         public void Start()
         {
-            if (started)
-                return;
-
             timer.Enabled = true;
-            started = true;
         }
 
         public void Stop()
         {
-            if (!started)
-                return;
-
             timer.Enabled = false;
-            started = false;
         }
 
         public void Dispose()
@@ -52,9 +56,17 @@ namespace Scheduling
             timer.Dispose();
         }
 
+        public Task ForceFire()
+        {
+            return Task.Run(() => Execute(null, null));
+        }
+
+
         private void Execute(object source, ElapsedEventArgs args)
         {
-            if (maxExecutionLimit != -1 && executedTimes >= maxExecutionLimit)
+            Interlocked.Increment(ref numFired);
+
+            if (maxExecutionLimit != -1 && NumExecuted >= maxExecutionLimit)
             {
                 Stop();
                 return;
@@ -67,11 +79,10 @@ namespace Scheduling
             {
                 if (isRunning)
                     return;
-
                 isRunning = true;
             }
 
-            executedTimes++;
+            NumExecuted++;
             action();
             isRunning = false;
         }
