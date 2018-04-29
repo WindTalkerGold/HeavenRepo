@@ -1,7 +1,5 @@
 def findAllSelfDividing():
-    for i in range(1, 10000):
-        if isSelfDividing(i):
-            yield i
+    return [i for i in range(1, 10000) if isSelfDividing(i)]
 
 def isSelfDividing(value):
     print("testing", value)
