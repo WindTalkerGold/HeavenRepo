@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 
-namespace Scheduling
+namespace HeavenRepo.Scheduler
 {
     public class WorkItemQueue
     {

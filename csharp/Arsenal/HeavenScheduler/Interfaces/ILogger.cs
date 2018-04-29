@@ -1,5 +1,5 @@
 ﻿
-namespace Scheduling
+namespace HeavenRepo.Scheduler
 {
     public interface ILogger
     {

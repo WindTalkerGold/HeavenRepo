@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Scheduling
+namespace HeavenRepo.Scheduler
 {
     public enum Progress
     {

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Scheduling;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using HeavenRepo.Scheduler;
+using NUnit.Framework;
 
 namespace HeavenSchedulerTests
 {
-    [TestClass]
+    [TestFixture]
     public class SingleEntranceTimerTest
     {
         class DataBag
@@ -36,7 +36,7 @@ namespace HeavenSchedulerTests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void Test_SingleEntranceTimer_OnlyOneRunningInstance()
         {
             int parallism = 3;
@@ -61,7 +61,7 @@ namespace HeavenSchedulerTests
             timer.Dispose();
         }
 
-        [TestMethod]
+        [Test]
         public void Test_SingleEntranceTimer_MaxRunTimeLimitation()
         {
             int parallism = 10;
@@ -83,7 +83,7 @@ namespace HeavenSchedulerTests
             timer.Dispose();
         }
 
-        [TestMethod]
+        [Test]
         public void Test_SingleEntranceTimer_AutoStart()
         {
             DataBag db = new DataBag();
