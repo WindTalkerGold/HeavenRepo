@@ -1,7 +1,13 @@
 ﻿using System;
 
-namespace Scheduling
+namespace HeavenRepo.Scheduler
 {
+    /// <summary>
+    /// A work item that simply checks the status of a WorkItemProgress project.
+    /// It will set status to Started on Start(), after that it will never change that progress object.
+    /// External process will use the status changing to "Started" as a processing start signal.
+    /// External process will update the progress object based on its process.
+    /// </summary>
     public class LookupWorkItem : IWorkItem
     {
         private readonly WorkItemProgress progressToMonitor;

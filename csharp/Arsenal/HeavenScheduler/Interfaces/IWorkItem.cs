@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Scheduling
+namespace HeavenRepo.Scheduler
 {
     /// <summary>
     /// Represent a work item. All methods here should be non blocking.

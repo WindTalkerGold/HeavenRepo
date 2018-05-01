@@ -1,13 +1,13 @@
-﻿using Scheduling;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using HeavenRepo.Scheduler;
 using HeavenSchedulerTests.Mock;
+using NUnit.Framework;
 
 namespace HeavenSchedulerTests
 {
-    [TestClass]
+    [TestFixture]
     public class WorkItemQueueTests
     {
-        [TestMethod]
+        [Test]
         public void Test_RefreshWorkItemStatus_UntilComplete()
         {
             DummyLogger mockedLogger = new DummyLogger();
@@ -41,7 +41,7 @@ namespace HeavenSchedulerTests
             Assert.AreEqual(1, mockedLogger.CompletedLogged);
         }
 
-        [TestMethod]
+        [Test]
         public void Test_RefreshWorkItemStatus_UntilFail()
         {
             DummyLogger mockedLogger = new DummyLogger();
@@ -76,7 +76,7 @@ namespace HeavenSchedulerTests
             Assert.AreEqual(1, mockedLogger.FailedLogged);
         }
 
-        [TestMethod]
+        [Test]
         public void Test_RefreshWorkItemStatus_FailToStart()
         {
             DummyLogger mockedLogger = new DummyLogger();

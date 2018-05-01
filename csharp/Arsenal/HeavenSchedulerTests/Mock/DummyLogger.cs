@@ -1,4 +1,4 @@
-﻿using Scheduling;
+﻿using HeavenRepo.Scheduler;
 namespace HeavenSchedulerTests.Mock
 {
     /// <summary>

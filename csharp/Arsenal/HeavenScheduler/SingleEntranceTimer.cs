@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-
 using Timer = System.Timers.Timer;
-namespace Scheduling
+
+namespace HeavenRepo.Scheduler
 {
     /// <summary>
     /// A timer that allows at most one running instance to the action

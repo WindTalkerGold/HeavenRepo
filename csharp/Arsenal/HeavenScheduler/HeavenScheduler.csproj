@@ -7,8 +7,8 @@
     <ProjectGuid>{6E9E5B55-4DCC-42CA-889B-87799638EC67}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HeavenScheduler</RootNamespace>
-    <AssemblyName>HeavenScheduler</AssemblyName>
+    <RootNamespace>HeavenRepo.Scheduler</RootNamespace>
+    <AssemblyName>HeavenRepo.Scheduler</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,13 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ILogger.cs" />
-    <Compile Include="IWorkItem.cs" />
-    <Compile Include="LookupWorkItem.cs" />
+    <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Interfaces\IWorkItem.cs" />
+    <Compile Include="WorkItems\LookupWorkItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingleEntranceTimer.cs" />
     <Compile Include="WorkItemProgress.cs" />
     <Compile Include="WorkItemQueue.cs" />
+    <Compile Include="WorkItems\ThreadBasedWorkItem.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
