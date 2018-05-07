@@ -97,7 +97,7 @@ namespace MultiThread.Throttle
         {
             while (isRunning || !this.processes.All(queue=>queue.IsEmpty))
             {
-                //bool shouldYieldCpu = false;
+                bool shouldYieldCpu = false;
                 for (int quotaId =0;quotaId<this.quotaConfig.QuotaIdsCount;quotaId++)
                 {
                     var processPool = this.processes[quotaId];
@@ -105,7 +105,7 @@ namespace MultiThread.Throttle
                     // no process queued
                     if (!processPool.TryPeek(out process))
                     {
-                        //shouldYieldCpu = true;
+                        shouldYieldCpu = true;
                         continue;
                     }
 
@@ -114,22 +114,21 @@ namespace MultiThread.Throttle
                     // no tokens avaliable now
                     if (!this.tokens[quotaId].TryPeek(out token))
                     {
-                        //shouldYieldCpu = true;
+                        shouldYieldCpu = true;
                         continue;
                     }
 
                     if (!processPool.TryDequeue(out process) || !tokenQueue.TryDequeue(out token))
                     {
-                        // should happend
+                        // shouldn't happend
                         continue;
                     }
 
                     process.Execute();
                 }
 
-                //if(shouldYieldCpu)
-                 //   Thread.Yield();
-                
+                if(shouldYieldCpu)
+                    Thread.Yield();
             }
         }
     }
