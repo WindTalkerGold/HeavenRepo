@@ -43,6 +43,11 @@
     <Compile Include="ConcurrentExecuter.cs" />
     <Compile Include="ConcurrentProducer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Throttle\IThrottableProcess.cs" />
+    <Compile Include="Throttle\IThrottleController.cs" />
+    <Compile Include="Throttle\ThrottleConfig.cs" />
+    <Compile Include="Throttle\ThrottleController.cs" />
+    <Compile Include="Throttle\Token.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
