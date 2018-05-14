@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4E6E2226
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeavenSchedulerTests", "HeavenSchedulerTests\HeavenSchedulerTests.csproj", "{B2625C58-5305-4511-AFE1-45D8906622E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeavenPatterns", "HeavenPatterns\HeavenPatterns.csproj", "{0CB5C82E-D4FD-4B18-9831-68357A43B56A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{B2625C58-5305-4511-AFE1-45D8906622E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2625C58-5305-4511-AFE1-45D8906622E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2625C58-5305-4511-AFE1-45D8906622E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CB5C82E-D4FD-4B18-9831-68357A43B56A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CB5C82E-D4FD-4B18-9831-68357A43B56A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CB5C82E-D4FD-4B18-9831-68357A43B56A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CB5C82E-D4FD-4B18-9831-68357A43B56A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
