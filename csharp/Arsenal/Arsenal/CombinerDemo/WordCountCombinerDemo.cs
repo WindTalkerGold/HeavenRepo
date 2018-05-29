@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Arsenal.CombinerDemo
@@ -15,29 +14,18 @@ namespace Arsenal.CombinerDemo
     class WordCountCombinerDemo
     {
         public int MaxEventsPerBatch { get; set; }
-
         public int NumBuckets { get; set; }
-
         public string WordCountFolder { get; set; }
-
         public int AggregateLevel { get; set; }
-
         public int TotalDifferentWords { get; set; }
         public int OccuranceOfSkewWords { get; set; }
-
         public TimeSpan Interval { get; set; }
 
         public volatile bool Running = false;
         List<Task> reducerTasks;
         private WordCountReducer reducer;
         private WordCountEventQueue queue;
-
-        List<int> bucketProcessingCount;
-
-        public WordCountCombinerDemo()
-        {
-            // config inited outside
-        }
+        private List<int> bucketProcessingCount;
 
         public void Run(string[] args)
         {
@@ -70,11 +58,7 @@ namespace Arsenal.CombinerDemo
                 property.SetValue(this, parsedValue);
             }
 
-            Task task = Start();
-            while (!task.IsCompleted)
-            {
-                Thread.Sleep(1000 * 60);
-            }
+            Start().Wait();
         }
 
         public async Task Start()
@@ -98,7 +82,6 @@ namespace Arsenal.CombinerDemo
             await resetRunning;
             Console.WriteLine("all reducing tasks finished!");
             Console.WriteLine(string.Join(", ", bucketProcessingCount));
-
         }
 
         public async Task GenerateEventsTask()
@@ -123,8 +106,6 @@ namespace Arsenal.CombinerDemo
                     await Task.Delay(1);
             }
         }
-
-        
 
         public async Task ResetRunningWhenQueuesAreEmpty()
         {
