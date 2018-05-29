@@ -1,10 +1,13 @@
-﻿namespace Arsenal
+﻿using Arsenal.CombinerDemo;
+
+namespace Arsenal
 {
     class Program
     {
         static void Main(string[] args)
         {
-            new ThrottlingDemo().Run();
+            WordCountCombinerDemo demo = new WordCountCombinerDemo();
+            demo.Run(args);
         }
     }
 }

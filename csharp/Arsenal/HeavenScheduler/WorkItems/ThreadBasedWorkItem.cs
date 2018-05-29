@@ -28,8 +28,6 @@ namespace HeavenRepo.Scheduler
 
         public bool Start()
         {
-            Console.WriteLine("555");
-
             string message;
             if (!Validate(out message))
             {
