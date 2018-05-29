@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aggregation\AggregationReducerBase.cs" />
+    <Compile Include="Aggregation\IAggregatable.cs" />
     <Compile Include="ConcurrentExecuter.cs" />
     <Compile Include="ConcurrentProducer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
