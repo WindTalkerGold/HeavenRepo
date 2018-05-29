@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace Arsenal.CombinerDemo
 {
+    /*
+     Arsenal.exe --MaxEventsPerBatch 100 --NumBuckets 100 
+                 --WordCountFolder D:\Coding\Git\HeavenRepo\csharp\Arsenal\Arsenal\bin\Debug\Words 
+                 --AggregateLevel 2<change this value to 1,2,3> --TotalDifferentWords 20<adjust this for number of words>
+                 --OccuranceOfSkewWords 100000<adjust this for number of words> --Interval 00:00:01
+         */
     class WordCountCombinerDemo
     {
         public int MaxEventsPerBatch { get; set; }
@@ -31,6 +37,44 @@ namespace Arsenal.CombinerDemo
         public WordCountCombinerDemo()
         {
             // config inited outside
+        }
+
+        public void Run(string[] args)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+
+            for (int i = 0; i < args.Length; i += 2)
+            {
+                dict[args[i]] = args[i + 1];
+            }
+
+            var properties = GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                string name = property.Name;
+                string value = dict["--" + name];
+                object parsedValue = null;
+                if (property.PropertyType == typeof(string))
+                {
+                    parsedValue = value;
+                }
+                else if (property.PropertyType == typeof(int))
+                {
+                    parsedValue = int.Parse(value);
+                }
+                else if (property.PropertyType == typeof(TimeSpan))
+                {
+                    parsedValue = TimeSpan.Parse(value);
+                }
+
+                property.SetValue(this, parsedValue);
+            }
+
+            Task task = Start();
+            while (!task.IsCompleted)
+            {
+                Thread.Sleep(1000 * 60);
+            }
         }
 
         public async Task Start()
