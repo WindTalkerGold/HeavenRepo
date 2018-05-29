@@ -1,36 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Arsenal.CombinerDemo
 {
+    /*
+     Arsenal.exe --MaxEventsPerBatch 100 --NumBuckets 100 
+                 --WordCountFolder D:\Coding\Git\HeavenRepo\csharp\Arsenal\Arsenal\bin\Debug\Words 
+                 --AggregateLevel 2<change this value to 1,2,3> --TotalDifferentWords 20<adjust this for number of words>
+                 --OccuranceOfSkewWords 100000<adjust this for number of words> --Interval 00:00:01
+         */
     class WordCountCombinerDemo
     {
         public int MaxEventsPerBatch { get; set; }
-
         public int NumBuckets { get; set; }
-
         public string WordCountFolder { get; set; }
-
         public int AggregateLevel { get; set; }
-
         public int TotalDifferentWords { get; set; }
         public int OccuranceOfSkewWords { get; set; }
-
         public TimeSpan Interval { get; set; }
 
         public volatile bool Running = false;
         List<Task> reducerTasks;
         private WordCountReducer reducer;
         private WordCountEventQueue queue;
+        private List<int> bucketProcessingCount;
 
-        List<int> bucketProcessingCount;
-
-        public WordCountCombinerDemo()
+        public void Run(string[] args)
         {
-            // config inited outside
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+
+            for (int i = 0; i < args.Length; i += 2)
+            {
+                dict[args[i]] = args[i + 1];
+            }
+
+            var properties = GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                string name = property.Name;
+                string value = dict["--" + name];
+                object parsedValue = null;
+                if (property.PropertyType == typeof(string))
+                {
+                    parsedValue = value;
+                }
+                else if (property.PropertyType == typeof(int))
+                {
+                    parsedValue = int.Parse(value);
+                }
+                else if (property.PropertyType == typeof(TimeSpan))
+                {
+                    parsedValue = TimeSpan.Parse(value);
+                }
+
+                property.SetValue(this, parsedValue);
+            }
+
+            Start().Wait();
         }
 
         public async Task Start()
@@ -54,7 +82,6 @@ namespace Arsenal.CombinerDemo
             await resetRunning;
             Console.WriteLine("all reducing tasks finished!");
             Console.WriteLine(string.Join(", ", bucketProcessingCount));
-
         }
 
         public async Task GenerateEventsTask()
@@ -79,8 +106,6 @@ namespace Arsenal.CombinerDemo
                     await Task.Delay(1);
             }
         }
-
-        
 
         public async Task ResetRunningWhenQueuesAreEmpty()
         {

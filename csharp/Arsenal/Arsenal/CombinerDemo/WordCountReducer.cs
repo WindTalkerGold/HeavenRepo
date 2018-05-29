@@ -2,7 +2,6 @@
 using System.IO;
 using MultiThread.Aggregation;
 
-
 namespace Arsenal.CombinerDemo
 {
     class WordCountReducer : AggregationReducerBase<WordCountEvent>
