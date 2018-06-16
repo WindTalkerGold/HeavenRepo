@@ -1,6 +1,9 @@
 import json
 import urllib.request
 from stock import Stock
+from azure.cosmosdb.table.tableservice import TableService
+from azure.cosmosdb.table.models import EntityProperty
+from azure.cosmosdb.table.models import EdmType
 
 class SymbolCrawler:
     def __init__(self):
@@ -25,7 +28,7 @@ class SymbolCrawler:
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6',
             'Host':'xueqiu.com',
-            'Cookie':'device_id=e4ba4977314e200234880bac6b3585af; s=f61bvmhzj7; __utmz=1.1523804163.4.3.utmcsr=link.zhihu.com|utmccn=(referral)|utmcmd=referral|utmcct=/; __utma=1.1562254249.1522590556.1523804163.1525183132.5; aliyungf_tc=AQAAABhCY1nYcAwAZYBQde0XdOVe29qI; xq_a_token=019174f18bf425d22c8e965e48243d9fcfbd2cc0; xq_a_token.sig=_pB0kKy3fV9fvtvkOzxduQTrp7E; xq_r_token=2d465aa5d312fbe8d88b4e7de81e1e915de7989a; xq_r_token.sig=lOCElS5ycgbih9P-Ny3cohQ-FSA; u=251528814974866; _ga=GA1.2.1562254249.1522590556; _gid=GA1.2.447715148.1528814975; Hm_lvt_1db88642e346389874251b5a1eded6e3=1528814975; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1528814975'}
+            'Cookie':'device_id=e4ba4977314e200234880bac6b3585af; s=f61bvmhzj7; _ga=GA1.2.1562254249.1522590556; _gid=GA1.2.447715148.1528814975; xq_a_token=019174f18bf425d22c8e965e48243d9fcfbd2cc0; xq_a_token.sig=_pB0kKy3fV9fvtvkOzxduQTrp7E; xq_r_token=2d465aa5d312fbe8d88b4e7de81e1e915de7989a; xq_r_token.sig=lOCElS5ycgbih9P-Ny3cohQ-FSA; Hm_lvt_1db88642e346389874251b5a1eded6e3=1528814975,1528897343; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1528897343; u=111528897342585; _gat_gtag_UA_16079156_4=1'}
         req = urllib.request.Request(url, headers=headers)
         response = urllib.request.urlopen(req)
 
@@ -45,5 +48,8 @@ if __name__ == '__main__':
     while crawler.has_next():
         crawler.crawl_next()
 
-    output = open('symbols.txt', 'w')
-    output.writelines(['%s' % eachStock for eachStock in crawler.stocks])
+    table_service = TableService(account_name='heaventextb06a', account_key='**fill your own key**')
+    for each_stock in crawler.stocks:
+        print(each_stock)
+        body = EntityProperty(EdmType.STRING, str(each_stock))
+        table_service.insert_or_replace_entity('heavenstock', each_stock)

@@ -1,8 +1,11 @@
-class Stock:
+from azure.cosmosdb.table.models import Entity
+
+
+class Stock(Entity):
     def __init__(self, symbol, code, name):
-        self.symbol = symbol
-        self.code = code
-        self.name = name
+        self.PartitionKey = symbol
+        self.RowKey = code
+        self.Name = name
 
     def __str__(self):
-        return '{}\t{}\r\n'.format(self.symbol, self.code)
+        return '{}\t{}\t{}'.format(self.PartitionKey, self.RowKey, self.Name)
