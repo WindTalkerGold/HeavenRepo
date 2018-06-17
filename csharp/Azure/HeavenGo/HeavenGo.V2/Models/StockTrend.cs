@@ -1,9 +1,10 @@
-﻿
+﻿using Microsoft.WindowsAzure.Storage.Table;
+
 namespace HeavenGo.Models
 {
-    public class StockTrend 
+    public class StockTrend : TableEntity
     {
-        public StockTrend() 
+        public StockTrend() : base()
         {
         }
 
