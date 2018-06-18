@@ -8,7 +8,7 @@ namespace StorageAccessor
         public string GetConnectionString()
         {
             return
-                "DefaultEndpointsProtocol=https;AccountName=heaventextb06a;AccountKey=hh31agsXlDO0yg5Eg4Y4R31HZcURGD94VektZfxYyaXIGB3vsqZAC+Tzd+GVQWizwNb7sSNdGLXhdNS2tZjoeg==;EndpointSuffix=core.windows.net";
+                "##connection string goes here##";
         }
 
         public CloudTableClient GetTableClient()
