@@ -1,0 +1,47 @@
+﻿@{
+    DateTime utcTime = ViewBag.Time ?? DateTime.UtcNow;
+    DateTime pstTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(utcTime, "Pacific Standard Time");
+    DateTime cstTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(utcTime, "China Standard Time");
+}
+
+<style>
+    .input-group-addon {
+        min-width: 100px;
+        text-align: left;
+    }
+
+    .label {
+        min-width: 72px !important;
+        text-align: left;
+        display: inline-block !important
+    }
+</style>
+
+<h2>@ViewBag.Message</h2>
+
+<div class="input-group">
+    <span class="input-group-addon">Filetime</span>
+    <input id="filetime" type="number" class="form-control" placeholder="@utcTime.ToFileTimeUtc()" aria-describedby="sizing-addon1">
+</div>
+<br />
+
+<div class="input-group">
+    <span class="input-group-addon">Ticks</span>
+    <input id="ticks" type="number" class="form-control" placeholder="@utcTime.Ticks" aria-describedby="sizing-addon2">
+</div>
+<br />
+
+<p><span class="label label-info">UTC +0</span> @utcTime.ToString("O")</p>
+<p><span class="label label-info">UTC +8</span> @cstTime.ToString("O")</p>
+<p><span class="label label-info">UTC -7</span> @pstTime.ToString("O")</p>
+
+<button type="button" class="btn btn-primary btn-sm" onclick="reload()">Convert</button>
+
+<script>
+    function reload() {
+        var filetime = $("#filetime").val();
+        var ticks = $("#ticks").val();
+
+        location.href = "/Home/TimeConvert?filetime=" + filetime + "&ticks=" + ticks;
+    }
+</script>
