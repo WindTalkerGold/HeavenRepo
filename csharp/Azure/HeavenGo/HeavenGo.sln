@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeavenGo.V2.Tests", "Heaven
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{44AB5EEF-95D3-4FF6-8633-8E02D224868E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceBusConnector", "ServiceBusConnector\ServiceBusConnector.csproj", "{2268FBE8-5B2A-4C59-8F46-E9AC9262B73D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{331D17C4-9385-49B9-890C-64FBF3AC1412}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{331D17C4-9385-49B9-890C-64FBF3AC1412}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{331D17C4-9385-49B9-890C-64FBF3AC1412}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2268FBE8-5B2A-4C59-8F46-E9AC9262B73D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2268FBE8-5B2A-4C59-8F46-E9AC9262B73D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2268FBE8-5B2A-4C59-8F46-E9AC9262B73D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2268FBE8-5B2A-4C59-8F46-E9AC9262B73D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
