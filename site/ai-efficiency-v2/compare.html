@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt 对比实验 — 同一篇文章，两种 Prompt 的天壤之别</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans SC', 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        .page-header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 2rem 3rem;
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .page-header h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .back-link {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .back-link:hover {
+            color: #e2e8f0;
+            border-color: #60a5fa;
+            background: rgba(96, 165, 250, 0.1);
+        }
+
+        /* ── Prompt Cards ── */
+        .prompt-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            padding: 1.5rem 3rem;
+            background: #1e293b;
+        }
+        .prompt-card {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .prompt-card-header {
+            padding: 12px 20px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .prompt-card.bad .prompt-card-header {
+            background: #451a03;
+            color: #fbbf24;
+        }
+        .prompt-card.good .prompt-card-header {
+            background: #052e16;
+            color: #4ade80;
+        }
+        .prompt-body {
+            padding: 16px 20px;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            font-family: 'Consolas', 'Monaco', monospace;
+            max-height: 280px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #334155 transparent;
+        }
+        .prompt-card.bad .prompt-body {
+            background: #1c1917;
+            color: #fdba74;
+            border: 1px solid #78350f;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+        }
+        .prompt-card.good .prompt-body {
+            background: #022c22;
+            color: #86efac;
+            border: 1px solid #14532d;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+        }
+        .prompt-body::-webkit-scrollbar { width: 6px; }
+        .prompt-body::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+        /* ── VS Badge ── */
+        .vs-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem;
+            background: #1e293b;
+        }
+        .vs-badge span {
+            background: linear-gradient(135deg, #ef4444, #8b5cf6);
+            color: white;
+            font-weight: 800;
+            font-size: 1.4rem;
+            padding: 8px 24px;
+            border-radius: 50px;
+            letter-spacing: 2px;
+        }
+
+        /* ── Results ── */
+        .results-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            flex: 1;
+        }
+        .result-panel {
+            padding: 2rem 2.5rem;
+            overflow-y: auto;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+        .result-panel.left {
+            background: #fefce8;
+            color: #1c1917;
+            border-right: 3px solid #e2e8f0;
+        }
+        .result-panel.right {
+            background: #f0fdf4;
+            color: #1c1917;
+        }
+        .result-panel h2 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .result-panel.left h2 {
+            color: #b45309;
+            border-color: #fbbf24;
+        }
+        .result-panel.right h2 {
+            color: #15803d;
+            border-color: #4ade80;
+        }
+
+        /* ── Markdown Content Styling ── */
+        .md-content h3 { font-size: 1.05rem; color: #0f172a; margin: 1.2rem 0 0.5rem; }
+        .md-content h4 { font-size: 0.95rem; color: #334155; margin: 1rem 0 0.3rem; }
+        .md-content p { margin: 0.5rem 0; line-height: 1.7; }
+        .md-content strong { color: #0f172a; }
+        .md-content blockquote {
+            border-left: 3px solid #94a3b8;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem 0;
+            background: rgba(0,0,0,0.03);
+            border-radius: 0 6px 6px 0;
+            font-size: 0.9rem;
+        }
+        .md-content ul, .md-content ol {
+            padding-left: 1.2rem;
+            margin: 0.3rem 0;
+        }
+        .md-content li { margin: 0.2rem 0; }
+        .md-content hr {
+            border: none;
+            border-top: 1px solid #d1d5db;
+            margin: 1rem 0;
+        }
+        .md-content em { color: #64748b; }
+
+        /* ── Verdict ── */
+        .verdict-bar {
+            background: linear-gradient(90deg, #1e293b, #0f172a);
+            padding: 1.5rem 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            border-top: 1px solid #334155;
+        }
+        .verdict-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+        .verdict-item .star {
+            color: #fbbf24;
+        }
+        .verdict-item .label {
+            color: #94a3b8;
+        }
+        .verdict-item .value {
+            font-weight: 700;
+        }
+        .verdict-item.bad .value { color: #fb923c; }
+        .verdict-item.good .value { color: #4ade80; }
+
+        /* ── Scrollbar in result panels ── */
+        .result-panel::-webkit-scrollbar { width: 6px; }
+        .result-panel::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .prompt-section, .results-section { grid-template-columns: 1fr; }
+            .result-panel.left { border-right: none; border-bottom: 3px solid #e2e8f0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>🧪 Prompt 对比实验 — 同一篇文章，两种 Prompt 的天壤之别</h1>
+        <a class="back-link" href="./index.html#2">← 返回演示文稿</a>
+    </div>
+
+    <!-- Original Article Source -->
+    <div style="background: #1e293b; padding: 0.8rem 3rem; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #334155;">
+        <span style="font-size: 0.9rem; color: #94a3b8;">📰 原始英文素材：</span>
+        <a href="https://www.msn.com/en-us/news/insight/haberman-warns-of-trump-s-potential-military-power-grab/gm-GM38A34703" target="_blank" style="color: #60a5fa; text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: color 0.2s;">Haberman Warns of Trump's Potential Military Power Grab — MSN News ↗</a>
+        <span style="font-size: 0.78rem; color: #64748b; margin-left: auto;">两份 Prompt 使用的是完全相同的这篇原文</span>
+    </div>
+
+    <!-- Prompt Cards -->
+    <div class="prompt-section">
+        <div class="prompt-card bad">
+            <div class="prompt-card-header">❌ Prompt A — 一句话指令（15字）</div>
+            <div class="prompt-body">基于这篇文章，写一篇中文的新闻报道，用于中英双语教学
+
+====下面是英文原文====
+（附上原文...）</div>
+        </div>
+        <div class="prompt-card good">
+            <div class="prompt-card-header">✅ Prompt B — 结构化指令（500+字）</div>
+            <div class="prompt-body">Role: 你是一位深耕中英双语教学多年的资深英语名师。你擅长拆解复杂文本，将其转化为深入浅出、富有启发性的教学文案。
+
+Task: 请阅读我提供的英文文章，并按照以下结构撰写一份中英双语精读笔记/教学文案：
+
+1. 核心精粹 (Core Insights)
+   内容梗概：用中英双语简述文章的主旨大意（3句话以内）。
+   深度解读：提炼文章最核心的思想内核，并结合当下社会现状或个人成长，进行适当的延伸与升华。
+
+2. 语言点深度拆解 (Linguistic Breakdown)
+   请挑选文章中最具学习价值的亮点，分为三个板块：
+   【词法珠玑】提取3-5个高阶词汇或短语。要求：英汉双解、文章原句、原创例句。
+   【语法显微镜】识别1-2个关键语法点，结合原句解析。
+   【句法艺术】挑选1个逻辑严密的长难句。提供句子结构图解与意译赏析。
+
+3. 互动与思考 (Interactive Task)
+   设计1个具有启发性的思考题，引导读者留言。
+
+Output Style Constraints:
+   语气：专业而亲切，富有感染力。
+   排版：Markdown 格式，加粗、列表和引用块。
+   双语比例：解析部分以中文为主，英文为辅。
+
+====下面是英文原文====
+（附上原文...）</div>
+        </div>
+    </div>
+
+    <!-- VS -->
+    <div class="vs-badge"><span>⬇ 相同模型 (DeepSeek) · 相同原文 · 不同产出 ⬇</span></div>
+
+    <!-- Results Side by Side -->
+    <div class="results-section" style="height: calc(100vh - 480px); min-height: 500px;">
+        <div class="result-panel left">
+            <h2>📄 Prompt A 的产出</h2>
+            <div class="md-content" id="result-left"></div>
+        </div>
+        <div class="result-panel right">
+            <h2>📄 Prompt B 的产出</h2>
+            <div class="md-content" id="result-right"></div>
+        </div>
+    </div>
+
+    <!-- Verdict -->
+    <div class="verdict-bar">
+        <div class="verdict-item bad">
+            <span class="label">Prompt A 产出</span>
+            <span class="star">⭐⭐</span>
+            <span class="value">43 行 · 纯新闻改写 · 无教学增值</span>
+        </div>
+        <div class="verdict-item" style="color: #64748b; font-size: 1.5rem; font-weight:800;">VS</div>
+        <div class="verdict-item good">
+            <span class="label">Prompt B 产出</span>
+            <span class="star">⭐⭐⭐⭐⭐</span>
+            <span class="value">94 行 · 完整教案 · 词法/语法/句法/互动</span>
+        </div>
+    </div>
+
+    <script>
+        // Simple markdown-to-HTML converter (good enough for this content)
+        function mdToHtml(md) {
+            let html = md
+                // Headings
+                .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+                .replace(/^#### (.+)$/gm, '<h4>$1</h4>')
+                // Horizontal rules
+                .replace(/^---$/gm, '<hr>')
+                .replace(/^\*\*\*$/gm, '<hr>')
+                // Bold + italic
+                .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                // Blockquotes (multi-line)
+                .replace(/^>\s?(.*)$/gm, '<blockquote>$1</blockquote>')
+                // Unordered lists
+                .replace(/^\*\s+(.+)$/gm, '<li>$1</li>')
+                .replace(/^-\s+(.+)$/gm, '<li>$1</li>')
+                // Line breaks
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>');
+
+            // Merge adjacent blockquotes
+            html = html.replace(/<\/blockquote><br><blockquote>/g, '<br>');
+            html = html.replace(/<\/blockquote><blockquote>/g, '<br>');
+
+            // Wrap lists
+            html = html.replace(/(<li>.*?<\/li>(<br>)?)+/g, (match) => {
+                return '<ul>' + match.replace(/<br>/g, '') + '</ul>';
+            });
+
+            return '<p>' + html + '</p>';
+        }
+
+        async function loadContent() {
+            try {
+                const [res1, res2] = await Promise.all([
+                    fetch('./assets/deepseek-1.md'),
+                    fetch('./assets/deepseek-2.md')
+                ]);
+                const [md1, md2] = await Promise.all([res1.text(), res2.text()]);
+
+                document.getElementById('result-left').innerHTML = mdToHtml(md1);
+                document.getElementById('result-right').innerHTML = mdToHtml(md2);
+            } catch (e) {
+                document.getElementById('result-left').innerHTML = '<p style="color:red">加载失败，请确保 assets/deepseek-1.md 存在</p>';
+                document.getElementById('result-right').innerHTML = '<p style="color:red">加载失败，请确保 assets/deepseek-2.md 存在</p>';
+            }
+        }
+
+        loadContent();
+    </script>
+</body>
+</html>

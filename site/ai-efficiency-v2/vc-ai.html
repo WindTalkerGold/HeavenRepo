@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VC 公司 AI 落地场景分析</title>
+    <meta name="description" content="面向 VC 公司的法务、人事、投资与 AI 科普场景落地分析。">
+    <link rel="stylesheet" href="vc-ai.css">
+</head>
+
+<body>
+    <header class="hero">
+        <nav class="topbar" aria-label="页面导航">
+            <a class="brand" href="#top" aria-label="返回顶部">AI Efficiency V2</a>
+            <div class="nav-links">
+                <a href="#scenarios">场景分析</a>
+                <a href="#meta-skill">Meta Skill</a>
+                <a href="#roadmap">落地路线</a>
+                <a href="#compliance">AI 合规</a>
+            </div>
+        </nav>
+
+        <section class="hero-content" id="top">
+            <div class="eyebrow">VC Company AI Landing Playbook</div>
+            <h1>把 AI 用在真正能提升效率的地方</h1>
+            <p>面向法务、人事、投资团队，逐个判断场景是否适合 AI 落地，给出推荐做法、实施优先级与风险边界。</p>
+            <div class="hero-actions">
+                <a class="button primary" href="#scenarios">查看场景矩阵</a>
+                <a class="button secondary" href="#roadmap">看实施路线</a>
+            </div>
+        </section>
+    </header>
+
+    <main>
+        <section class="section compact" id="real-cases">
+            <div class="section-heading">
+                <p class="kicker">实际案例</p>
+                <h2>我目前了解到的 AI 落地实际案例</h2>
+                <p class="section-subtitle">先从已经能跑通的案例出发，再接入后面的场景分析和落地判断。</p>
+            </div>
+            <div class="case-grid">
+                <article class="case-card">
+                    <span class="case-index">01</span>
+                    <h3>专业翻译</h3>
+                    <p>企业内部词库、术语表和知识库结合 AI 翻译，重点提升一致性和专业表达。</p>
+                    <strong>适合抽象为：知识库 + 生成式改写</strong>
+                </article>
+                <article class="case-card">
+                    <span class="case-index">02</span>
+                    <h3>审核类</h3>
+                    <p>AI 提取发票、行程、报销金额等信息，核对是否符合公司要求，是否与提交金额一致。</p>
+                    <strong>适合抽象为：结构化提取 + checklist 核对</strong>
+                </article>
+                <article class="case-card">
+                    <span class="case-index">03</span>
+                    <h3>龙虾助手</h3>
+                    <p>爬取、整理“公开”信息，形成线索、摘要和持续监控结果。</p>
+                    <strong>适合抽象为：公开信息搜索 + AI 助手</strong>
+                </article>
+                <article class="case-card">
+                    <span class="case-index">04</span>
+                    <h3>流程分析</h3>
+                    <p>把记录流程多次执行节点的 Excel 直接交给 AI 分析，找出耗时多、打回次数多的节点。</p>
+                    <strong>适合抽象为：数据分析 + 流程优化</strong>
+                </article>
+            </div>
+        </section>
+
+        <section class="section compact">
+            <div class="section-heading">
+                <p class="kicker">判断框架</p>
+                <h2>不是所有流程都适合一上来做“全自动”</h2>
+            </div>
+            <div class="principle-grid">
+                <article class="principle-card">
+                    <span class="principle-index">01</span>
+                    <h3>资料是否结构化</h3>
+                    <p>简历、合同、DD 资料、行业报告越容易归档和切片，AI 越容易稳定复用。</p>
+                </article>
+                <article class="principle-card">
+                    <span class="principle-index">02</span>
+                    <h3>判断标准是否清晰</h3>
+                    <p>Checklist、岗位画像、模板条款、投委会关注点越明确，输出越容易评估。</p>
+                </article>
+                <article class="principle-card">
+                    <span class="principle-index">03</span>
+                    <h3>容错空间是否足够</h3>
+                    <p>法律结论、录用结论、投资建议都不能让 AI 直接拍板，应定位为辅助分析。</p>
+                </article>
+                <article class="principle-card">
+                    <span class="principle-index">04</span>
+                    <h3>是否能形成闭环</h3>
+                    <p>有人复核、结果可追踪、反馈能沉淀，才适合从单点工具升级为工作流。</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section" id="scenarios">
+            <div class="section-heading split">
+                <div>
+                    <p class="kicker">场景矩阵</p>
+                    <h2>按场景筛选 AI 落地机会</h2>
+                    <p class="section-subtitle">审核类适合 checklist，分析类适合本地工作台，AI 助手类适合持续搜索和信息监控。</p>
+                </div>
+                <div class="filters" aria-label="筛选场景">
+                    <button class="filter active" data-filter="all">全部</button>
+                    <button class="filter" data-filter="审核类">审核类</button>
+                    <button class="filter" data-filter="分析类">分析类</button>
+                    <button class="filter" data-filter="AI助手类">AI 助手类</button>
+                </div>
+            </div>
+
+            <div class="category-guide">
+                <article><strong>审核类</strong><span>checklist 相关应用：PPT 对照 checklist、简历初筛、投资项目红线检查。</span></article>
+                <article><strong>分析类</strong><span>推荐 Claude Code 本地或龙虾：基于资料提取信息、简单搜索、形成分析。</span></article>
+                <article><strong>AI 助手类</strong><span>例如养一个龙虾搜索公开信息；注意爬虫、访问控制和数据合规风险。</span></article>
+            </div>
+
+            <div class="scenario-layout">
+                <div class="scenario-list" id="scenarioList" aria-live="polite"></div>
+                <aside class="scenario-detail" id="scenarioDetail">
+                    <p class="detail-placeholder">选择一个场景查看详情。</p>
+                </aside>
+            </div>
+        </section>
+
+        <section class="section muted" id="meta-skill">
+            <div class="section-heading split">
+                <div>
+                    <p class="kicker">Meta Skill</p>
+                    <h2>很多场景可以收敛成一个“通用 Checklist 审核引擎”</h2>
+                    <p class="section-subtitle">核心思路：上游负责解析文件，审核点外置，逐条给结论，依据必须引用原文或数据位置。</p>
+                </div>
+            </div>
+            <div class="meta-layout">
+                <article class="meta-card main">
+                    <h3>document-review</h3>
+                    <p>输入已解析文档和 checklist，输出“通过 / 不通过 / 存疑”、原文依据、严重程度和汇总报告。</p>
+                    <div class="flow">
+                        <span>解析器</span>
+                        <strong>→</strong>
+                        <span>文档内容</span>
+                        <strong>→</strong>
+                        <span>Checklist</span>
+                        <strong>→</strong>
+                        <span>审核报告</span>
+                    </div>
+                </article>
+                <article class="meta-card">
+                    <h3>适合覆盖</h3>
+                    <ul>
+                        <li>法务 checklist 核对</li>
+                        <li>协议条款覆盖检查</li>
+                        <li>简历与岗位画像匹配</li>
+                        <li>投资报告完整性审核</li>
+                        <li>项目红线与合规规则核对</li>
+                    </ul>
+                </article>
+                <article class="meta-card">
+                    <h3>不应覆盖</h3>
+                    <ul>
+                        <li>直接给法律最终意见</li>
+                        <li>自动决定录用或淘汰</li>
+                        <li>自动做投资决策</li>
+                        <li>无依据的市场判断</li>
+                    </ul>
+                </article>
+            </div>
+            <div class="skill-grid">
+                <article>
+                    <span>Wrapper 01</span>
+                    <h3>resume-review</h3>
+                    <p>简历解析 + 岗位要求 checklist + 候选人评价和面试问题。</p>
+                </article>
+                <article>
+                    <span>Wrapper 02</span>
+                    <h3>investment-report-review</h3>
+                    <p>报告解析 + 模板章节 checklist + 缺失项与数据矛盾提示。</p>
+                </article>
+                <article>
+                    <span>Wrapper 03</span>
+                    <h3>investment-project-review</h3>
+                    <p>项目资料结构化 + 红线规则 + 高风险项和需人工确认项。</p>
+                </article>
+                <article>
+                    <span>Wrapper 04</span>
+                    <h3>legal-clause-review</h3>
+                    <p>协议解析 + 模板条款 checklist + 语义覆盖率和风险差异。</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section" id="roadmap">
+            <div class="section-heading">
+                <p class="kicker">落地路线</p>
+                <h2>先识别真实场景，再决定工具、供应商和人员投入</h2>
+                <p class="section-subtitle">AI 落地不是先买系统，而是先找到值得解决的问题，并明确目标、边界和责任人。</p>
+            </div>
+            <div class="timeline roadmap-main">
+                <article>
+                    <span>01</span>
+                    <h3>识别场景</h3>
+                    <p>这是一切的开始。可以通过内部 AI 竞赛、业务提案或试点招募，让团队提交真实场景；公司提供约束、资源和激励，同时分析目标、数据条件和风险点。</p>
+                </article>
+                <article>
+                    <span>02</span>
+                    <h3>接洽 2B 服务提供商</h3>
+                    <p>带着已识别的场景和数据分类去接洽供应商，重点看权限、审计、数据不训练、系统集成和工作流能力。钉钉、飞书等可作为集成型平台优先调研，但不做具体推荐。</p>
+                </article>
+                <article>
+                    <span>03</span>
+                    <h3>招聘或指定专人落地</h3>
+                    <p>AI 落地需要持续运营。建议招聘或指定全职负责人，连接业务、IT、法务合规和供应商，持续推动试点、复盘和规模化。</p>
+                </article>
+            </div>
+            <div class="roadmap-work">
+                <h3>后续持续要做的事</h3>
+                <div class="work-grid">
+                    <article><strong>整合工作流</strong><span>把 AI 嵌入复核、批注、审批、归档和权限流程，而不是停留在一次性对话。</span></article>
+                    <article><strong>开发工具</strong><span>围绕高频场景做轻量工具，例如 checklist 审核、资料摘要、公开信息监控、Excel 流程分析。</span></article>
+                    <article><strong>维护知识库</strong><span>持续更新模板、术语、历史项目、行业资料和反例库，让 AI 输出越来越贴近公司标准。</span></article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="compliance">
+            <div class="section-heading">
+                <p class="kicker">AI Compliance</p>
+                <h2>AI 合规要从 Security、Privacy、Responsible AI 三个角度触发</h2>
+                <p class="section-subtitle">VC 公司使用 AI 的风险不只是“数据会不会泄露”，还包括系统是否可被攻破、数据边界是否正确、输出是否可靠。</p>
+            </div>
+
+            <div class="compliance-grid">
+                <article class="compliance-card security">
+                    <span>01 · Security</span>
+                    <h3>所有使用 AI 的系统，都要先问：会不会被其他人攻破？</h3>
+                    <p>安全问题不是模型回答好不好，而是 AI 系统接入文档、账号、插件、浏览器、内部知识库之后，是否形成新的攻击面。</p>
+                    <ul>
+                        <li>检查是否存在提示词注入、越权读取、插件滥用、文件解析漏洞、浏览器自动化被劫持等风险。</li>
+                        <li>类似 OpenClaw / AI Agent 类工具，需要重点关注本地权限、API Key 暴露、任意命令执行和数据回传链路。</li>
+                        <li>内部 AI 助手应按最小权限接入系统，不应默认拥有全部项目库、CRM、邮箱和网盘访问权限。</li>
+                        <li>高敏场景要保留日志、审批、隔离环境和红队测试，避免“效率工具”绕过原有安全边界。</li>
+                    </ul>
+                </article>
+
+                <article class="compliance-card privacy">
+                    <span>02 · Privacy</span>
+                    <h3>给到 AI 的数据，要按敏感级别决定能不能用、怎么用</h3>
+                    <p>公开行业资料、投资客户资料、内部流程、内部经营数据不是同一种数据，不能用同一套账号和工具处理。</p>
+                    <div class="data-table">
+                        <div><strong>A 公开类</strong><p>行业研究、新闻、公告、招股书、公开财报：可以直接给 AI，但仍需保留来源、时间和引用。</p></div>
+                        <div><strong>B 公司资产 - 可公开</strong><p>公司官网材料、公开宣传稿、可外发介绍：可以直接给 AI，用于改写、翻译、摘要和排版。</p></div>
+                        <div><strong>C 公司资产 - 仅供内部 & 必要合作伙伴</strong><p>内部模板、流程、非公开但低敏资料：可交给企业合规 AI 模型供应商，前提是有合同、权限、审计和不训练承诺。</p></div>
+                        <div><strong>D 公司资产 - 仅供必要人员查阅</strong><p>基金表现、LP 信息、薪酬绩效、未公开交易：不能默认进入通用或普通 2B 模型，需要逐案审批、脱敏或私有化环境。</p></div>
+                        <div><strong>E 外部提供数据</strong><p>企业分享的 BP、财务、合同、DD 材料等内部数据：要尤其讨论授权边界、保密义务、是否允许上传第三方 AI。</p></div>
+                    </div>
+                    <ul>
+                        <li>A / B 可以直接给 AI，适合个人账号、通用模型或企业 2B 账号。</li>
+                        <li>C 可以交给企业合规 AI 模型供应商，但要确认数据不训练、权限隔离、日志审计和供应商责任。</li>
+                        <li>D / E 需要专门讨论：是否有授权、是否必须脱敏、是否只能在私有化或专属环境处理，不能用个人账号临时解决。</li>
+                    </ul>
+                </article>
+
+                <article class="compliance-card responsible">
+                    <span>03 · Responsible AI</span>
+                    <h3>规避 AI 幻觉，核心是让输出可验证、可追责、可降级</h3>
+                    <p>AI 可以做摘要、对比、初稿和风险提示，但不能把没有证据的生成内容包装成确定结论。</p>
+                    <ul>
+                        <li>所有关键判断必须附引用：页码、段落、原文、数据来源或检索链接。</li>
+                        <li>输出要区分“事实摘录、模型推断、待人工确认”，避免把推断混进事实。</li>
+                        <li>对投资、法务、人事结论设置人工复核门槛，高风险项默认不能自动通过。</li>
+                        <li>使用 checklist 和模板约束输出结构，让 AI 先找依据，再给结论。</li>
+                        <li>建立反例库和复盘机制，把 AI 出错案例沉淀成下一轮审核规则。</li>
+                    </ul>
+                </article>
+            </div>
+
+            <div class="risk-grid compliance-risks">
+                <article>
+                    <h3>数据分类与权限</h3>
+                    <p>先按 A-E 数据分类判断能否给 AI、给哪类 AI、是否需要脱敏和审批，再谈具体模型或工具。</p>
+                </article>
+                <article>
+                    <h3>事实错误与幻觉</h3>
+                    <p>要求 AI 标注引用来源、列出不确定项；没有来源的判断只能作为待核查线索。</p>
+                </article>
+                <article>
+                    <h3>偏见与合规</h3>
+                    <p>人事场景尤其要避免用性别、年龄、学校等不当因素做自动化排序或淘汰。</p>
+                </article>
+                <article>
+                    <h3>责任边界</h3>
+                    <p>AI 可形成初稿、清单和对比表，但法律意见、录用结论、投资决策必须由负责人确认。</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>AI Efficiency V2 · VC 公司 AI 落地场景分析</p>
+    </footer>
+
+    <script src="vc-ai.js"></script>
+</body>
+
+</html>
