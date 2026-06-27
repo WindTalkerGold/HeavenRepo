@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>打字练习 · 分阶段训练</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>键盘小能手 <span class="sub">分阶段打字训练</span></h1>
+    <div id="filestatus" class="filestatus">成绩文件：未连接</div>
+  </header>
+
+  <!-- MENU -->
+  <section id="menu" class="menu"></section>
+  <div class="menu-actions">
+    <button class="ghost" id="btnLeaderboard">查看排行榜</button>
+    <button class="ghost" id="btnPickFile">选择/新建成绩文件</button>
+    <button class="ghost" id="btnExport">导出备份</button>
+    <button class="ghost" id="btnReset" style="color:var(--bad);border-color:#5a2330">清空成绩</button>
+  </div>
+
+  <!-- LEADERBOARD -->
+  <section id="leaderboard" class="leaderboard"></section>
+
+  <!-- PRACTICE -->
+  <section id="practice" class="practice">
+    <div class="topbar">
+      <div class="label" id="stageLabel"></div>
+      <div class="timer" id="liveTimer">0.00 秒 <span class="penalty"></span></div>
+      <div class="progress" id="progress"></div>
+    </div>
+    <div class="target-box" id="targetBox">
+      <div class="target" id="target"></div>
+    </div>
+    <input id="imeInput" class="ime-input" style="display:none" autocomplete="off" autocapitalize="off" spellcheck="false" />
+    <div class="timer-line" id="timerLine"></div>
+    <div class="hint" id="hint"></div>
+    <div class="btns">
+      <button id="btnAgain">重新开始本轮</button>
+      <button class="ghost" id="btnBack">返回菜单</button>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="results">
+    <h2 id="resTitle">本轮完成！</h2>
+    <div class="big" id="resBig"></div>
+    <div class="sub" id="resSub"></div>
+    <div class="btns">
+      <button id="btnNext">再来一轮</button>
+      <button class="ghost" id="btnResBack">返回菜单</button>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- 以 <script> 方式加载题库数据，避免 fetch/file:// 的 CORS 问题 -->
+<script src="data/letters.js"></script>
+<script src="data/words.js"></script>
+<script src="data/sentences.js"></script>
+<script src="data/chinese.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
