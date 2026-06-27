@@ -1,6 +1,5 @@
 # ---- Runtime / generated data ----
-# Typing app rewrites this on every play
-site/typing/typing-scores.json
+# Typing app stores scores in the browser's localStorage, not files.
 
 # ---- Node / build artifacts ----
 node_modules/

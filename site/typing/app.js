@@ -84,30 +84,7 @@ function toast(msg, bad){
   toast._t = setTimeout(()=> t.className = "toast" + (bad?" bad":""), 1600);
 }
 
-/* ========= 成绩持久化 ========= */
-const IDB_DB = "typing_scores";
-const IDB_STORE = "kv";
-const IDB_KEY = "fileHandle";
-
-function idbOpen(){
-  return new Promise((res, rej)=>{
-    if(!indexedDB){ rej(new Error("no idb")); return; }
-    const r = indexedDB.open(IDB_DB, 1);
-    r.onupgradeneeded = ()=> r.result.createObjectStore(IDB_STORE);
-    r.onsuccess = ()=> res(r.result);
-    r.onerror = ()=> rej(r.error);
-  });
-}
-async function idbGet(key){
-  try{ const db = await idbOpen(); return await new Promise((res,rej)=>{ const tx=db.transaction(IDB_STORE,"readonly"); const rq=tx.objectStore(IDB_STORE).get(key); rq.onsuccess=()=>res(rq.result); rq.onerror=()=>rej(rq.error); }); }catch(e){ return undefined; }
-}
-async function idbSet(key, val){
-  try{ const db = await idbOpen(); await new Promise((res,rej)=>{ const tx=db.transaction(IDB_STORE,"readwrite"); tx.objectStore(IDB_STORE).put(val,key); tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error); }); }catch(e){}
-}
-
-let fileHandle = null;
-let fsSupported = typeof window !== "undefined" && "showSaveFilePicker" in window;
-
+/* ========= 成绩持久化（localStorage，静态站点可用） ========= */
 function loadMirror(){
   try{ return JSON.parse(localStorage.getItem("typing_scores") || "{}"); }
   catch(e){ return {}; }
@@ -115,87 +92,12 @@ function loadMirror(){
 function saveMirror(){
   try{ localStorage.setItem("typing_scores", JSON.stringify(scores)); }catch(e){}
 }
-
-async function persist(){
-  saveMirror();
-  if(fileHandle){
-    try{
-      const w = await fileHandle.createWritable();
-      await w.write(JSON.stringify(scores, null, 2));
-      await w.close();
-    }catch(e){ console.warn("write file failed", e); }
-  }
-}
-
-async function ensureFilePermissions(){
-  if(!fileHandle) return false;
-  const opts = { mode: "readwrite" };
-  if(await fileHandle.queryPermission(opts) === "granted") return true;
-  if(await fileHandle.requestPermission(opts) === "granted") return true;
-  return false;
-}
-
-async function readScoresFromHandle(){
-  try{
-    const f = await fileHandle.getFile();
-    const txt = await f.text();
-    if(txt && txt.trim()){
-      const obj = JSON.parse(txt);
-      for(const k of Object.keys(obj)){ scores[k] = obj[k]; }
-    }
-  }catch(e){ console.warn("read file failed", e); }
-}
-
-async function pickFile(){
-  if(!fsSupported){
-    toast("当前浏览器不支持文件写入，已用本地存储保存", true);
-    return;
-  }
-  try{
-    const h = await window.showSaveFilePicker({
-      suggestedName: "typing-scores.json",
-      types: [{ description: "JSON 成绩文件", accept: { "application/json": [".json"] } }]
-    });
-    fileHandle = h;
-    await idbSet(IDB_KEY, h);
-    await readScoresFromHandle();
-    await persist();
-    updateFileStatus();
-    toast("成绩文件已连接");
-    renderMenu();
-  }catch(e){
-    if(e && e.name !== "AbortError") toast("选择文件失败", true);
-  }
-}
-
-async function initFile(){
-  if(!fsSupported){ updateFileStatus(); return; }
-  try{
-    const h = await idbGet(IDB_KEY);
-    if(h){ fileHandle = h; }
-  }catch(e){}
-  if(fileHandle){
-    const ok = await ensureFilePermissions();
-    if(ok){
-      await readScoresFromHandle();
-      saveMirror();
-    }
-  }
-  updateFileStatus();
-}
+function persist(){ saveMirror(); }
 
 function updateFileStatus(){
   const el = $("filestatus");
-  if(!fsSupported){
-    el.textContent = "本地存储模式（浏览器不支持文件写入）";
-    el.className = "filestatus warn";
-  } else if(fileHandle){
-    el.textContent = "成绩文件：已连接 " + (fileHandle.name || "scores.json");
-    el.className = "filestatus ok";
-  } else {
-    el.textContent = "成绩文件：未连接（点击下方选择/新建）";
-    el.className = "filestatus warn";
-  }
+  el.textContent = "成绩保存在浏览器本地存储";
+  el.className = "filestatus ok";
 }
 
 /* ========= 菜单 ========= */
@@ -228,7 +130,7 @@ function addScore(id, time){
   a.push({ time: Math.round(time), date: nowISO() });
   a.sort((x,y)=> x.time - y.time);
   scores[id] = a.slice(0, 10);
-  persist();
+  saveMirror();
 }
 
 /* ========= 排行榜 ========= */
@@ -448,7 +350,6 @@ function finishRound(){
 
 /* ========= 按钮绑定 ========= */
 $("btnLeaderboard").onclick = renderLeaderboard;
-$("btnPickFile").onclick = pickFile;
 $("btnExport").onclick = ()=>{
   const blob = new Blob([JSON.stringify(scores, null, 2)], {type:"application/json"});
   const url = URL.createObjectURL(blob);
@@ -462,7 +363,6 @@ $("btnReset").onclick = ()=>{
   if(confirm("确定清空所有阶段的成绩记录吗？此操作不可撤销。")){
     scores = {};
     saveMirror();
-    if(fileHandle) persist();
     toast("成绩已清空");
     renderMenu();
   }
@@ -474,4 +374,5 @@ $("btnResBack").onclick = renderMenu;
 
 /* ========= 启动 ========= */
 loadData();
-initFile().then(renderMenu);
+updateFileStatus();
+renderMenu();
