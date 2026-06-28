@@ -1,14 +1,131 @@
-// 默认初始化数据 (防止白屏，展示示例)
+// 默认初始化数据 (6/29 - 7/5日程安排)
 const DEFAULT_EVENTS = [
-    { id: '1', day: 1, title: '部门例会', startTime: '09:00', endTime: '10:30', color: 'blue', desc: '汇报上周进度，讨论本周规划' },
-    { id: '2', day: 1, title: '健身房锻炼', startTime: '18:30', endTime: '20:00', color: 'orange', desc: '胸腿训练' },
-    { id: '3', day: 2, title: '项目需求评审', startTime: '14:00', endTime: '15:30', color: 'purple', desc: '会议室 402 / 线上同步' },
-    { id: '4', day: 3, title: '精读《AI工作法》', startTime: '10:00', endTime: '11:30', color: 'green', desc: '阅读第 3、4 章节并记录笔记' },
-    { id: '5', day: 4, title: '设计稿初稿评审', startTime: '15:00', endTime: '16:00', color: 'blue', desc: 'UI/UX 团队内部评审' },
-    { id: '6', day: 5, title: '周五技术分享', startTime: '16:30', endTime: '17:30', color: 'purple', desc: '主题：MCP 协议在智能体开发中的实践' },
-    { id: '7', day: 5, title: '朋友聚餐', startTime: '19:00', endTime: '21:30', color: 'rose', desc: '老地方火锅店' },
-    { id: '8', day: 6, title: '英语精读复盘', startTime: '09:30', endTime: '11:00', color: 'green', desc: '完成双语练习题' },
-    { id: '9', day: 7, title: '整理本周复盘与计划', startTime: '16:00', endTime: '17:30', color: 'gray', desc: '沉淀至个人知识库' }
+    // 6月29日 周一 (day: 1)
+    { id: 'm1', day: 1, title: '🌅 起床早餐', startTime: '07:30', endTime: '08:00', color: 'orange', desc: '' },
+    { id: 'm2', day: 1, title: '🚶 晨间活动 / 和妹妹玩', startTime: '08:00', endTime: '09:00', color: 'orange', desc: '' },
+    { id: 'm3', day: 1, title: '🛏️ 整理床铺 (家务)', startTime: '09:00', endTime: '10:00', color: 'gray', desc: '' },
+    { id: 'm4', day: 1, title: '🎹 钢琴上午 30m', startTime: '10:00', endTime: '10:30', color: 'green', desc: '' },
+    { id: 'm5', day: 1, title: '📖 阅读 40m', startTime: '10:30', endTime: '11:10', color: 'green', desc: '' },
+    { id: 'm6', day: 1, title: '🎮 自由游戏 / 和妹妹玩', startTime: '11:10', endTime: '12:00', color: 'rose', desc: '' },
+    { id: 'm7', day: 1, title: '🍱 午饭+午休 / 和妹妹安静玩', startTime: '12:00', endTime: '13:30', color: 'orange', desc: '' },
+    { id: 'm8', day: 1, title: '🍎 加餐+和妹妹玩', startTime: '13:30', endTime: '14:00', color: 'orange', desc: '' },
+    { id: 'm9', day: 1, title: '🎹 钢琴下午 30m', startTime: '14:00', endTime: '14:30', color: 'green', desc: '' },
+    { id: 'm10', day: 1, title: '📝 预习 📚 语文', startTime: '14:30', endTime: '15:30', color: 'blue', desc: '' },
+    { id: 'm11', day: 1, title: '🧹 扫地擦桌 (家务)', startTime: '15:30', endTime: '16:30', color: 'gray', desc: '' },
+    { id: 'm12', day: 1, title: '📺 家有儿女', startTime: '16:30', endTime: '17:00', color: 'rose', desc: '' },
+    { id: 'm13', day: 1, title: '💃 广场舞 1h', startTime: '17:00', endTime: '18:00', color: 'rose', desc: '' },
+    { id: 'm14', day: 1, title: '🍲 晚饭', startTime: '18:00', endTime: '19:00', color: 'orange', desc: '' },
+    { id: 'm15', day: 1, title: '📐 几何 爸爸课', startTime: '19:00', endTime: '20:00', color: 'purple', desc: '' },
+    { id: 'm16', day: 1, title: '📖 阅读 40m', startTime: '20:00', endTime: '20:40', color: 'green', desc: '' },
+    { id: 'm17', day: 1, title: '📝 日记+洗漱+睡觉', startTime: '20:40', endTime: '21:00', color: 'orange', desc: '' },
+
+    // 6月30日 周二 (day: 2)
+    { id: 't1', day: 2, title: '🌅 起床早餐', startTime: '07:30', endTime: '08:00', color: 'orange', desc: '' },
+    { id: 't2', day: 2, title: '🚶 晨间活动 / 和妹妹玩', startTime: '08:00', endTime: '09:00', color: 'orange', desc: '' },
+    { id: 't3', day: 2, title: '🍳 帮忙洗菜 (家务)', startTime: '09:00', endTime: '10:00', color: 'gray', desc: '' },
+    { id: 't4', day: 2, title: '🎹 钢琴上午 30m', startTime: '10:00', endTime: '10:30', color: 'green', desc: '' },
+    { id: 't5', day: 2, title: '📖 阅读 40m', startTime: '10:30', endTime: '11:10', color: 'green', desc: '' },
+    { id: 't6', day: 2, title: '🎮 自由游戏 / 和妹妹玩', startTime: '11:10', endTime: '12:00', color: 'rose', desc: '' },
+    { id: 't7', day: 2, title: '🍱 午饭+午休 / 和妹妹安静玩', startTime: '12:00', endTime: '13:30', color: 'orange', desc: '' },
+    { id: 't8', day: 2, title: '🍎 加餐+和妹妹玩', startTime: '13:30', endTime: '14:00', color: 'orange', desc: '' },
+    { id: 't9', day: 2, title: '🎹 钢琴下午 30m', startTime: '14:00', endTime: '14:30', color: 'green', desc: '' },
+    { id: 't10', day: 2, title: '📝 预习 📐 数学', startTime: '14:30', endTime: '15:30', color: 'blue', desc: '' },
+    { id: 't11', day: 2, title: '📚 整理书桌 (家务)', startTime: '15:30', endTime: '16:30', color: 'gray', desc: '' },
+    { id: 't12', day: 2, title: '📺 家有儿女', startTime: '16:30', endTime: '17:00', color: 'rose', desc: '' },
+    { id: 't13', day: 2, title: '💃 广场舞 1h', startTime: '17:00', endTime: '18:00', color: 'rose', desc: '' },
+    { id: 't14', day: 2, title: '🍲 晚饭', startTime: '18:00', endTime: '19:00', color: 'orange', desc: '' },
+    { id: 't15', day: 2, title: '💻 编程 爸爸课', startTime: '19:00', endTime: '20:00', color: 'purple', desc: '' },
+    { id: 't16', day: 2, title: '📖 阅读 40m', startTime: '20:00', endTime: '20:40', color: 'green', desc: '' },
+    { id: 't17', day: 2, title: '📝 日记+洗漱+睡觉', startTime: '20:40', endTime: '21:00', color: 'orange', desc: '' },
+
+    // 7月1日 周三 (day: 3)
+    { id: 'w1', day: 3, title: '🌅 起床早餐', startTime: '07:30', endTime: '08:00', color: 'orange', desc: '' },
+    { id: 'w2', day: 3, title: '🚶 晨间活动 / 和妹妹玩', startTime: '08:00', endTime: '09:00', color: 'orange', desc: '' },
+    { id: 'w3', day: 3, title: '🌱 浇花喂鱼 (家务)', startTime: '09:00', endTime: '10:00', color: 'gray', desc: '' },
+    { id: 'w4', day: 3, title: '🎹 钢琴上午 30m', startTime: '10:00', endTime: '10:30', color: 'green', desc: '' },
+    { id: 'w5', day: 3, title: '📖 阅读 40m', startTime: '10:30', endTime: '11:10', color: 'green', desc: '' },
+    { id: 'w6', day: 3, title: '🎮 自由游戏 / 和妹妹玩', startTime: '11:10', endTime: '12:00', color: 'rose', desc: '' },
+    { id: 'w7', day: 3, title: '🍱 午饭+午休 / 和妹妹安静玩', startTime: '12:00', endTime: '13:30', color: 'orange', desc: '' },
+    { id: 'w8', day: 3, title: '🍎 加餐+和妹妹玩', startTime: '13:30', endTime: '14:00', color: 'orange', desc: '' },
+    { id: 'w9', day: 3, title: '🎹 钢琴下午 30m', startTime: '14:00', endTime: '14:30', color: 'green', desc: '' },
+    { id: 'w10', day: 3, title: '📝 预习 🔤 英语', startTime: '14:30', endTime: '15:30', color: 'blue', desc: '' },
+    { id: 'w11', day: 3, title: '🧺 收叠衣物 (家务)', startTime: '15:30', endTime: '16:30', color: 'gray', desc: '' },
+    { id: 'w12', day: 3, title: '📺 家有儿女', startTime: '16:30', endTime: '17:00', color: 'rose', desc: '' },
+    { id: 'w13', day: 3, title: '💃 广场舞 1h', startTime: '17:00', endTime: '18:00', color: 'rose', desc: '' },
+    { id: 'w14', day: 3, title: '🍲 晚饭', startTime: '18:00', endTime: '19:00', color: 'orange', desc: '' },
+    { id: 'w15', day: 3, title: '📐 几何 爸爸课', startTime: '19:00', endTime: '20:00', color: 'purple', desc: '' },
+    { id: 'w16', day: 3, title: '📖 阅读 40m', startTime: '20:00', endTime: '20:40', color: 'green', desc: '' },
+    { id: 'w17', day: 3, title: '📝 日记+洗漱+睡觉', startTime: '20:40', endTime: '21:00', color: 'orange', desc: '' },
+
+    // 7月2日 周四 (day: 4)
+    { id: 'th1', day: 4, title: '🌅 起床早餐', startTime: '07:30', endTime: '08:00', color: 'orange', desc: '' },
+    { id: 'th2', day: 4, title: '🚶 晨间活动 / 和妹妹玩', startTime: '08:00', endTime: '09:00', color: 'orange', desc: '' },
+    { id: 'th3', day: 4, title: '👕 叠衣服 (家务)', startTime: '09:00', endTime: '10:00', color: 'gray', desc: '' },
+    { id: 'th4', day: 4, title: '🎹 钢琴上午 30m', startTime: '10:00', endTime: '10:30', color: 'green', desc: '' },
+    { id: 'th5', day: 4, title: '📖 阅读 40m', startTime: '10:30', endTime: '11:10', color: 'green', desc: '' },
+    { id: 'th6', day: 4, title: '🎮 自由游戏 / 和妹妹玩', startTime: '11:10', endTime: '12:00', color: 'rose', desc: '' },
+    { id: 'th7', day: 4, title: '🍱 午饭+午休 / 和妹妹安静玩', startTime: '12:00', endTime: '13:30', color: 'orange', desc: '' },
+    { id: 'th8', day: 4, title: '🍎 加餐+和妹妹玩', startTime: '13:30', endTime: '14:00', color: 'orange', desc: '' },
+    { id: 'th9', day: 4, title: '🎹 钢琴下午 30m', startTime: '14:00', endTime: '14:30', color: 'green', desc: '' },
+    { id: 'th10', day: 4, title: '📝 预习 📚 语文', startTime: '14:30', endTime: '15:30', color: 'blue', desc: '' },
+    { id: 'th11', day: 4, title: '🍎 准备水果 (家务)', startTime: '15:30', endTime: '16:30', color: 'gray', desc: '' },
+    { id: 'th12', day: 4, title: '🏃‍♂️ 体能课 1h', startTime: '16:30', endTime: '17:30', color: 'rose', desc: '' },
+    { id: 'th13', day: 4, title: '🚿 洗澡+休息', startTime: '17:30', endTime: '18:00', color: 'orange', desc: '' },
+    { id: 'th14', day: 4, title: '🍲 晚饭', startTime: '18:00', endTime: '19:00', color: 'orange', desc: '' },
+    { id: 'th15', day: 4, title: '💻 编程 爸爸课', startTime: '19:00', endTime: '20:00', color: 'purple', desc: '' },
+    { id: 'th16', day: 4, title: '📖 阅读 40m / 家有儿女(补)', startTime: '20:00', endTime: '20:40', color: 'green', desc: '' },
+    { id: 'th17', day: 4, title: '📝 日记+洗漱+睡觉', startTime: '20:40', endTime: '21:00', color: 'orange', desc: '' },
+
+    // 7月3日 周五 (day: 5)
+    { id: 'f1', day: 5, title: '🌅 起床早餐', startTime: '07:00', endTime: '07:30', color: 'orange', desc: '' },
+    { id: 'f2', day: 5, title: '🚗 送学校', startTime: '07:30', endTime: '08:00', color: 'orange', desc: '' },
+    { id: 'f3', day: 5, title: '🏫 在校上课（半天）', startTime: '08:00', endTime: '12:00', color: 'blue', desc: '' },
+    { id: 'f4', day: 5, title: '🍱 回家午饭+和妹妹聊天', startTime: '12:00', endTime: '13:00', color: 'orange', desc: '' },
+    { id: 'f5', day: 5, title: '😴 短午休 / 和妹妹安静玩', startTime: '13:00', endTime: '13:45', color: 'orange', desc: '' },
+    { id: 'f6', day: 5, title: '🍎 加餐+和妹妹玩', startTime: '13:45', endTime: '14:00', color: 'orange', desc: '' },
+    { id: 'f7', day: 5, title: '🎹 钢琴下午 30m', startTime: '14:00', endTime: '14:30', color: 'green', desc: '' },
+    { id: 'f8', day: 5, title: '📝 预习 📐 数学', startTime: '14:30', endTime: '15:30', color: 'blue', desc: '' },
+    { id: 'f9', day: 5, title: '🧽 擦地拖地 (家务)', startTime: '15:30', endTime: '16:30', color: 'gray', desc: '' },
+    { id: 'f10', day: 5, title: '📺 家有儿女', startTime: '16:30', endTime: '17:00', color: 'rose', desc: '' },
+    { id: 'f11', day: 5, title: '🎮 自由 / 和妹妹玩', startTime: '17:00', endTime: '17:30', color: 'rose', desc: '' },
+    { id: 'f12', day: 5, title: '🎼 钢琴课 1h（外教）', startTime: '17:30', endTime: '18:30', color: 'purple', desc: '' },
+    { id: 'f13', day: 5, title: '🍲 晚饭', startTime: '18:30', endTime: '19:30', color: 'orange', desc: '' },
+    { id: 'f14', day: 5, title: '📐 几何 爸爸课', startTime: '19:30', endTime: '20:30', color: 'purple', desc: '' },
+    { id: 'f15', day: 5, title: '📖 阅读 20m', startTime: '20:30', endTime: '20:50', color: 'green', desc: '' },
+    { id: 'f16', day: 5, title: '📝 日记+睡觉', startTime: '20:50', endTime: '21:00', color: 'orange', desc: '' },
+
+    // 7月4日 周六 (day: 6)
+    { id: 'sa1', day: 6, title: '🌅 起床早餐+多吃', startTime: '07:30', endTime: '08:30', color: 'orange', desc: '' },
+    { id: 'sa2', day: 6, title: '🚗 出发攀岩馆', startTime: '08:30', endTime: '09:00', color: 'orange', desc: '' },
+    { id: 'sa3', day: 6, title: '🧗 攀岩 3h', startTime: '09:00', endTime: '12:00', color: 'rose', desc: '' },
+    { id: 'sa4', day: 6, title: '🍱 午饭+午休 / 和妹妹安静玩', startTime: '12:00', endTime: '13:30', color: 'orange', desc: '' },
+    { id: 'sa5', day: 6, title: '🍎 加餐+和妹妹玩', startTime: '13:30', endTime: '14:00', color: 'orange', desc: '' },
+    { id: 'sa6', day: 6, title: '🎹 钢琴下午 30m', startTime: '14:00', endTime: '14:30', color: 'green', desc: '' },
+    { id: 'sa7', day: 6, title: '📖 阅读 40m', startTime: '14:30', endTime: '15:10', color: 'green', desc: '' },
+    { id: 'sa8', day: 6, title: '📺 家有儿女', startTime: '15:10', endTime: '15:40', color: 'rose', desc: '' },
+    { id: 'sa9', day: 6, title: '🏃 自由休息 / 和妹妹玩', startTime: '15:40', endTime: '17:00', color: 'rose', desc: '' },
+    { id: 'sa10', day: 6, title: '💃 广场舞 1h', startTime: '17:00', endTime: '18:00', color: 'rose', desc: '' },
+    { id: 'sa11', day: 6, title: '🍲 晚饭', startTime: '18:00', endTime: '19:00', color: 'orange', desc: '' },
+    { id: 'sa12', day: 6, title: '📖 阅读+和妹妹散步+睡觉', startTime: '19:00', endTime: '21:00', color: 'green', desc: '' },
+
+    // 7月5日 周日 (day: 7)
+    { id: 'su1', day: 7, title: '🌅 起床早餐', startTime: '07:30', endTime: '08:00', color: 'orange', desc: '' },
+    { id: 'su2', day: 7, title: '🚶 晨间活动 / 和妹妹玩', startTime: '08:00', endTime: '09:00', color: 'orange', desc: '' },
+    { id: 'su3', day: 7, title: '🏃 户外晨间 / 和妹妹玩', startTime: '09:00', endTime: '10:00', color: 'rose', desc: '' },
+    { id: 'su4', day: 7, title: '🎹 钢琴上午 30m', startTime: '10:00', endTime: '10:30', color: 'green', desc: '' },
+    { id: 'su5', day: 7, title: '📖 阅读 40m', startTime: '10:30', endTime: '11:10', color: 'green', desc: '' },
+    { id: 'su6', day: 7, title: '🎮 自由（手工/桌游 / 和妹妹玩）', startTime: '11:10', endTime: '12:00', color: 'rose', desc: '' },
+    { id: 'su7', day: 7, title: '🍱 午饭+午休 / 和妹妹安静玩', startTime: '12:00', endTime: '13:30', color: 'orange', desc: '' },
+    { id: 'su8', day: 7, title: '🍎 加餐+和妹妹玩', startTime: '13:30', endTime: '14:00', color: 'orange', desc: '' },
+    { id: 'su9', day: 7, title: '🎹 钢琴下午 30m', startTime: '14:00', endTime: '14:30', color: 'green', desc: '' },
+    { id: 'su10', day: 7, title: '🎮 家庭活动 / 和妹妹玩', startTime: '14:30', endTime: '15:30', color: 'orange', desc: '' },
+    { id: 'su11', day: 7, title: '🎮 自由（与妹妹）', startTime: '15:30', endTime: '16:30', color: 'rose', desc: '' },
+    { id: 'su12', day: 7, title: '📺 家有儿女', startTime: '16:30', endTime: '17:00', color: 'rose', desc: '' },
+    { id: 'su13', day: 7, title: '💃 广场舞 1h', startTime: '17:00', endTime: '18:00', color: 'rose', desc: '' },
+    { id: 'su14', day: 7, title: '🍲 晚饭', startTime: '18:00', endTime: '19:00', color: 'orange', desc: '' },
+    { id: 'su15', day: 7, title: '🚗 出发去泳池', startTime: '19:00', endTime: '19:30', color: 'orange', desc: '' },
+    { id: 'su16', day: 7, title: '🏊 游泳课 1h', startTime: '19:30', endTime: '20:30', color: 'rose', desc: '' },
+    { id: 'su17', day: 7, title: '🚿 洗澡+睡觉', startTime: '20:30', endTime: '21:00', color: 'orange', desc: '' }
 ];
 
 // 核心状态数据
@@ -51,24 +168,29 @@ function setupEditableSheetMeta() {
     const sheetDesc = document.getElementById('sheet-desc');
 
     // 加载缓存
-    const cachedTitle = localStorage.getItem('schedule_sheet_title');
-    const cachedDesc = localStorage.getItem('schedule_sheet_desc');
+    const cachedTitle = localStorage.getItem('schedule_sheet_title_629');
 
-    if (cachedTitle) sheetTitle.textContent = cachedTitle;
-    if (cachedDesc) sheetDesc.textContent = cachedDesc;
+    if (cachedTitle && sheetTitle) sheetTitle.textContent = cachedTitle;
 
     // 监听输入保存
-    sheetTitle.addEventListener('blur', () => {
-        localStorage.setItem('schedule_sheet_title', sheetTitle.textContent.trim());
-    });
-    sheetDesc.addEventListener('blur', () => {
-        localStorage.setItem('schedule_sheet_desc', sheetDesc.textContent.trim());
-    });
+    if (sheetTitle) {
+        sheetTitle.addEventListener('blur', () => {
+            localStorage.setItem('schedule_sheet_title_629', sheetTitle.textContent.trim());
+        });
+    }
+
+    if (sheetDesc) {
+        const cachedDesc = localStorage.getItem('schedule_sheet_desc_629');
+        if (cachedDesc) sheetDesc.textContent = cachedDesc;
+        sheetDesc.addEventListener('blur', () => {
+            localStorage.setItem('schedule_sheet_desc_629', sheetDesc.textContent.trim());
+        });
+    }
 }
 
 // 数据持久化
 function loadData() {
-    const localData = localStorage.getItem('schedule_events');
+    const localData = localStorage.getItem('schedule_events_v3');
     if (localData) {
         try {
             events = JSON.parse(localData);
@@ -83,7 +205,7 @@ function loadData() {
 }
 
 function saveData() {
-    localStorage.setItem('schedule_events', JSON.stringify(events));
+    localStorage.setItem('schedule_events_v3', JSON.stringify(events));
 }
 
 // 格式化时间显示
