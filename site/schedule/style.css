@@ -524,7 +524,7 @@ footer kbd {
     body {
         background: #ffffff !important;
         color: #000000 !important;
-        font-size: 10pt;
+        font-size: 8.5pt;
     }
 
     /* 隐藏所有网页端控制元素、控制栏、页脚等 */
@@ -557,23 +557,22 @@ footer kbd {
     }
 
     .sheet-header {
-        border-bottom: 2px solid #000000 !important;
+        border-bottom: 1.5px solid #000000 !important;
+        padding-bottom: 4px !important;
+        margin-bottom: 8px !important;
     }
 
     .sheet-title-area h2 {
-        font-size: 20pt !important;
+        font-size: 13pt !important;
         color: #000000 !important;
-    }
-
-    .sheet-title-area p {
-        font-size: 9pt !important;
-        color: #555555 !important;
+        margin: 0 !important;
+        line-height: 1.2 !important;
     }
 
     /* 网格打印线优化 */
     .calendar-grid {
         grid-template-columns: repeat(7, 1fr) !important; /* 并排7列 */
-        gap: 2mm !important;
+        gap: 1.2mm !important;
         width: 100% !important;
         min-height: auto !important;
     }
@@ -582,39 +581,39 @@ footer kbd {
         background-color: #ffffff !important;
         border: 1px solid #94a3b8 !important; /* 使用灰黑色实线打印，而非虚线 */
         border-radius: 4px !important;
-        padding: 5px !important;
-        min-height: 140mm !important; /* 确保各列高度足够，填满A4页面高度 */
+        padding: 3px !important;
+        min-height: auto !important; /* 移除过大的强行高度限制 */
         page-break-inside: avoid !important; /* 避免列内断页 */
     }
 
     .day-header {
-        border-bottom: 1.5px solid #000000 !important;
-        padding-bottom: 3px !important;
-        margin-bottom: 5px !important;
+        border-bottom: 1.2px solid #000000 !important;
+        padding-bottom: 2px !important;
+        margin-bottom: 4px !important;
     }
 
     .day-name {
-        font-size: 10.5pt !important;
+        font-size: 8.5pt !important;
         color: #000000 !important;
     }
 
     .day-en {
-        font-size: 6pt !important;
-        color: #777777 !important;
+        font-size: 5pt !important;
+        color: #64748b !important;
     }
 
     /* 打印下的日程块展示 */
     .events-list {
-        gap: 3px !important;
+        gap: 1.5px !important;
     }
 
     .event-card {
-        border-left: 3.5px solid var(--tag-color) !important;
+        border-left: 2.5px solid var(--tag-color) !important;
         border-top: 1px solid #cbd5e1 !important;
         border-right: 1px solid #cbd5e1 !important;
         border-bottom: 1px solid #cbd5e1 !important;
-        border-radius: 4px !important;
-        padding: 4px 5px !important;
+        border-radius: 3px !important;
+        padding: 2px 3px !important;
         box-shadow: none !important;
         transform: none !important;
         page-break-inside: avoid !important;
@@ -622,19 +621,21 @@ footer kbd {
     }
 
     .event-time {
-        font-size: 7pt !important;
-        margin-bottom: 1px !important;
+        font-size: 6pt !important;
+        margin-bottom: 0.5px !important;
+        line-height: 1 !important;
     }
 
     .event-title {
-        font-size: 8.5pt !important;
+        font-size: 7.2pt !important;
         color: #000000 !important;
+        line-height: 1.25 !important;
     }
 
     .event-desc {
-        font-size: 7.5pt !important;
+        font-size: 6.5pt !important;
         color: #444444 !important;
-        margin-top: 2px !important;
+        margin-top: 1px !important;
     }
 }
 
