@@ -582,7 +582,10 @@ footer kbd {
         border: 1px solid #94a3b8 !important; /* 使用灰黑色实线打印，而非虚线 */
         border-radius: 4px !important;
         padding: 3px !important;
-        min-height: auto !important; /* 移除过大的强行高度限制 */
+        height: 162mm !important; /* 固定高度为 162mm 填满 A4 Landscape 高度 */
+        box-sizing: border-box !important;
+        display: flex !important;
+        flex-direction: column !important;
         page-break-inside: avoid !important; /* 避免列内断页 */
     }
 
@@ -604,7 +607,12 @@ footer kbd {
 
     /* 打印下的日程块展示 */
     .events-list {
-        gap: 1.5px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important; /* 均匀分布每一项日程 */
+        gap: 0 !important; /* 覆盖默认 gap，由 space-between 控制间隙 */
+        flex: 1 !important;
+        height: 100% !important;
     }
 
     .event-card {
