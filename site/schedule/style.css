@@ -1,0 +1,647 @@
+:root {
+    --primary-color: #3b82f6;
+    --primary-hover: #2563eb;
+    --bg-dark: #0f172a;
+    --bg-light: #f8fafc;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+}
+
+/* 颜色标签分类 */
+.tag-blue { --tag-color: #3b82f6; --tag-bg: #eff6ff; --tag-border: #bfdbfe; }
+.tag-green { --tag-color: #10b981; --tag-bg: #ecfdf5; --tag-border: #a7f3d0; }
+.tag-purple { --tag-color: #8b5cf6; --tag-bg: #f5f3ff; --tag-border: #ddd6fe; }
+.tag-orange { --tag-color: #f59e0b; --tag-bg: #fffbeb; --tag-border: #fef3c7; }
+.tag-rose { --tag-color: #f43f5e; --tag-bg: #fff1f2; --tag-border: #fecdd3; }
+.tag-gray { --tag-color: #64748b; --tag-bg: #f8fafc; --tag-border: #e2e8f0; }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+/* 头部样式 */
+header {
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.25rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    font-size: 2.25rem;
+}
+
+.logo-area h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--bg-dark);
+}
+
+.logo-area .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.selector-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.control-select {
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: #fff;
+    color: var(--text-main);
+    cursor: pointer;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.control-select:focus {
+    border-color: var(--primary-color);
+}
+
+/* 按钮样式 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    outline: none;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: #ffffff;
+    border-color: var(--border-color);
+    color: var(--text-main);
+}
+
+.btn-secondary:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.btn-danger {
+    background-color: #ef4444;
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+}
+
+/* 页面主体 */
+.page-container {
+    max-width: 1500px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+/* 日程卡片表单 (模拟 A4 大小) */
+.schedule-sheet {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    padding: 2.5rem;
+    transition: width 0.3s, min-height 0.3s;
+}
+
+/* 网页上预览 A4 横向尺寸的黄金比例缩放 */
+.layout-landscape {
+    width: 100%;
+    max-width: 1380px;
+    min-height: 850px;
+}
+
+/* 网页上预览 A4 纵向尺寸 */
+.layout-portrait {
+    width: 100%;
+    max-width: 980px;
+    min-height: 1200px;
+}
+
+.sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid var(--bg-dark);
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.sheet-title-area h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--bg-dark);
+    outline: none;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    transition: background-color 0.2s;
+}
+
+.sheet-title-area h2:hover, .sheet-title-area p:hover {
+    background-color: #f1f5f9;
+    cursor: text;
+}
+
+.sheet-title-area p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+    outline: none;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.badge {
+    background-color: #f1f5f9;
+    color: var(--text-muted);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* 7天网络排版 */
+.calendar-grid {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.layout-landscape .calendar-grid {
+    grid-template-columns: repeat(7, 1fr); /* 横向并排7列 */
+    min-height: 600px;
+}
+
+.layout-portrait .calendar-grid {
+    grid-template-columns: repeat(7, 1fr); /* 纵向时也可以7列，或者纵向时使用大模块。为了打印适配，通常纵向7列较窄但依然标准。下面加响应式自适应。 */
+    min-height: 900px;
+}
+
+.day-column {
+    background-color: #fafafa;
+    border: 1px dashed #e2e8f0;
+    border-radius: 8px;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.2s;
+}
+
+.day-column:hover {
+    background-color: #f4f4f5;
+    border-color: #cbd5e1;
+}
+
+.day-header {
+    text-align: center;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.day-name {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--bg-dark);
+}
+
+.day-en {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* 日程列表及日程块 */
+.events-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.event-card {
+    background-color: var(--tag-bg);
+    border-left: 4px solid var(--tag-color);
+    border-top: 1px solid var(--tag-border);
+    border-right: 1px solid var(--tag-border);
+    border-bottom: 1px solid var(--tag-border);
+    border-radius: 6px;
+    padding: 0.5rem 0.6rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    user-select: none;
+    position: relative;
+}
+
+.event-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px -2px rgba(0,0,0,0.06);
+}
+
+.event-time {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--tag-color);
+    margin-bottom: 0.15rem;
+    display: block;
+}
+
+.event-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+    word-break: break-all;
+}
+
+.event-desc {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+    white-space: pre-line;
+    word-break: break-all;
+}
+
+/* 添加按钮 */
+.add-event-btn {
+    width: 100%;
+    padding: 0.35rem;
+    background-color: transparent;
+    border: 1px dashed #cbd5e1;
+    border-radius: 6px;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 0.75rem;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-event-btn:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #ffffff;
+    transform: scale(1.02);
+}
+
+/* 页脚样式 */
+footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+footer kbd {
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.75rem;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+}
+
+/* Modal 弹窗样式 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-out;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 480px;
+    padding: 1.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: scale(0.95);
+    transition: transform 0.2s ease-out;
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-content h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--bg-dark);
+    margin-bottom: 1.25rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+}
+
+.form-group input[type="text"], .form-group textarea, .form-group input[type="time"] {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-group input[type="text"]:focus, .form-group textarea:focus, .form-group input[type="time"]:focus {
+    border-color: var(--primary-color);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.required {
+    color: #ef4444;
+}
+
+/* 颜色选择器 */
+.color-picker {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.color-option {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    background-color: var(--tag-bg);
+    border: 1px solid var(--tag-border);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-main);
+    transition: transform 0.1s, border-color 0.1s;
+}
+
+.color-option input {
+    display: none;
+}
+
+.color-option span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--tag-color);
+    display: inline-block;
+}
+
+.color-option:has(input:checked) {
+    border-color: var(--tag-color);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+    transform: scale(1.02);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+.right-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ── 打印适配 `@media print` (A4纸物理尺寸核心排版) ── */
+@media print {
+    /* 强行背景和颜色可打印（部分浏览器默认不打印背景色） */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-size: 10pt;
+    }
+
+    /* 隐藏所有网页端控制元素、控制栏、页脚等 */
+    .no-print {
+        display: none !important;
+    }
+
+    /* 移除外层页面间距、滚动条等 */
+    header, footer {
+        display: none !important;
+    }
+
+    .page-container {
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: none !important;
+        width: 100% !important;
+        display: block !important;
+    }
+
+    /* 格式化日程规划纸张 */
+    .schedule-sheet {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        min-height: auto !important;
+        background: transparent !important;
+    }
+
+    .sheet-header {
+        border-bottom: 2px solid #000000 !important;
+    }
+
+    .sheet-title-area h2 {
+        font-size: 20pt !important;
+        color: #000000 !important;
+    }
+
+    .sheet-title-area p {
+        font-size: 9pt !important;
+        color: #555555 !important;
+    }
+
+    /* 网格打印线优化 */
+    .calendar-grid {
+        grid-template-columns: repeat(7, 1fr) !important; /* 并排7列 */
+        gap: 2mm !important;
+        width: 100% !important;
+        min-height: auto !important;
+    }
+
+    .day-column {
+        background-color: #ffffff !important;
+        border: 1px solid #94a3b8 !important; /* 使用灰黑色实线打印，而非虚线 */
+        border-radius: 4px !important;
+        padding: 5px !important;
+        min-height: 140mm !important; /* 确保各列高度足够，填满A4页面高度 */
+        page-break-inside: avoid !important; /* 避免列内断页 */
+    }
+
+    .day-header {
+        border-bottom: 1.5px solid #000000 !important;
+        padding-bottom: 3px !important;
+        margin-bottom: 5px !important;
+    }
+
+    .day-name {
+        font-size: 10.5pt !important;
+        color: #000000 !important;
+    }
+
+    .day-en {
+        font-size: 6pt !important;
+        color: #777777 !important;
+    }
+
+    /* 打印下的日程块展示 */
+    .events-list {
+        gap: 3px !important;
+    }
+
+    .event-card {
+        border-left: 3.5px solid var(--tag-color) !important;
+        border-top: 1px solid #cbd5e1 !important;
+        border-right: 1px solid #cbd5e1 !important;
+        border-bottom: 1px solid #cbd5e1 !important;
+        border-radius: 4px !important;
+        padding: 4px 5px !important;
+        box-shadow: none !important;
+        transform: none !important;
+        page-break-inside: avoid !important;
+        background-color: var(--tag-bg) !important;
+    }
+
+    .event-time {
+        font-size: 7pt !important;
+        margin-bottom: 1px !important;
+    }
+
+    .event-title {
+        font-size: 8.5pt !important;
+        color: #000000 !important;
+    }
+
+    .event-desc {
+        font-size: 7.5pt !important;
+        color: #444444 !important;
+        margin-top: 2px !important;
+    }
+}
+
+/* 打印方向样式适配定义（通过 js 控制和 CSS3 Page 控制） */
+@media print {
+    /* 横向 A4 */
+    .layout-landscape {
+        width: 100% !important;
+    }
+}
