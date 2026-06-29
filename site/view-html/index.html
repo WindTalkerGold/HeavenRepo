@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Package Viewer · view-html</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<button id="toggle" class="toggle" hidden title="Show controls">☰</button>
+<header class="bar">
+  <div class="bar-inner">
+    <div class="title">📦 view-html</div>
+    <div class="sub">Upload a <code>.zip</code> with an <code>index.html</code>. Files render offline — outbound network is blocked.</div>
+    <div class="actions">
+      <label class="btn primary">
+        Upload zip
+        <input id="file" type="file" accept=".zip,application/zip" hidden />
+      </label>
+      <button id="clear" class="btn" hidden>Clear</button>
+    </div>
+    <div id="status" class="status"></div>
+  </div>
+</header>
+<main>
+  <div id="drop" class="drop">
+    <div class="drop-art">⬆</div>
+    <p>Drop a zip package here, or use <strong>Upload zip</strong>.</p>
+    <p class="muted">A sandbox blocks all external HTTP requests, downloads and form posts. Only files inside the package render.</p>
+  </div>
+  <iframe id="stage" class="stage" title="Rendered package" sandbox="allow-scripts" hidden></iframe>
+</main>
+<script src="vendor/jszip.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
