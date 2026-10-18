@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f9">
+  <meta name="description" content="查看世界各地当前时间，选择 2–4 个时区和可用时段，为跨国团队查找共同协作时间。自动处理夏令时。">
+  <title>Time Together · 时区协作助手 | HeavenRepo</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232c6555'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='white' stroke-width='3'/%3E%3Cpath d='M32 18v15l10 6' fill='none' stroke='white' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.mjs"></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="../">H<span class="brand-dot">.</span> <span>HeavenRepo</span></a><span class="top-label">SMALL TOOLS, BETTER DAYS</span><a href="../" class="back">← 返回首页</a></header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow"><span class="live-dot"></span> CONNECT ACROSS TIME ZONES</p><h1>相隔时区，<span>也能同频。</span></h1><p class="lede">从世界时间到团队空档，找到一个对大家都刚刚好的时刻。</p></div>
+      <div class="local-clock"><span>你的本地时间 <span id="local-zone"></span></span><strong id="local-time">--:--:--</strong><span id="local-date"></span></div>
+    </section>
+
+    <section class="section" aria-labelledby="world-title">
+      <div class="section-heading"><div><p class="eyebrow">01 / WORLD CLOCK</p><h2 id="world-title">此刻，世界几点？</h2><p>点击时钟加入团队，最多选择 4 个时区。</p></div><label class="search"><span aria-hidden="true">⌕</span><input id="zone-search" type="search" placeholder="搜索城市 / 时区，如 纽约、London" aria-label="搜索城市或 IANA 时区" autocomplete="off"></label></div>
+      <div class="clock-grid" id="world-clocks" aria-label="世界时钟"></div>
+      <div class="world-footer"><span id="search-count"></span><span><span class="live-dot"></span> 每秒更新 · 基于设备时间</span></div>
+      <p id="notice" class="notice" role="status"></p>
+    </section>
+
+    <section class="section planner" aria-labelledby="planner-title">
+      <div class="section-heading"><div><p class="eyebrow">02 / TEAM AVAILABILITY</p><h2 id="planner-title">把大家的好时间，放在一起。</h2><p>为每个时区设置当地可用时间，寻找共同的协作窗口。</p></div><span id="team-count" class="badge">0 / 4 个时区</span></div>
+      <form id="planner-form">
+        <div class="controls"><label>协作日期 <input type="date" id="meeting-date" required min="2000-01-01" max="2100-12-31"></label><label>最短共同空档 <select id="minimum"><option value="15">15 分钟</option><option value="30" selected>30 分钟</option><option value="60">1 小时</option><option value="120">2 小时</option></select></label><p id="reference-note"></p></div>
+        <div id="team-members" class="team-members"></div>
+        <div class="planner-bottom"><p>时间均为各地当地时间。结束早于开始表示跨午夜；相同表示全天。<br>日期以第一个时区为基准，自动按所选日期应用夏令时。</p><button class="primary" type="submit" id="find-button">查找共同时间 <span aria-hidden="true">→</span></button></div>
+      </form>
+    </section>
+
+    <section class="section results" aria-labelledby="results-title">
+      <div class="section-heading"><div><p class="eyebrow">03 / THE SWEET SPOT</p><h2 id="results-title">共同的时间，找到了。</h2><p id="result-summary" role="status"></p></div><div class="legend"><span><i class="available-key"></i>各地可用</span><span><i class="overlap-key"></i>共同空档</span></div></div>
+      <div id="timeline-wrap" class="timeline-wrap"></div>
+      <div id="overlap-results" class="overlap-results"></div>
+    </section>
+    <footer><span>Time Together <span class="footer-dot">/</span> 为跨时区协作留一点从容。</span><span>无需登录 · 数据仅保存在本机 · 不请求外部服务</span></footer>
+  </main>
+  <noscript><p class="noscript">请启用 JavaScript，以查看实时时钟和计算时区重叠时间。</p></noscript>
+</body>
+</html>

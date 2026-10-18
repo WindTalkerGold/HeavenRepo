@@ -8,6 +8,7 @@ when started manually in GitHub Actions. Deployment credentials live only in the
 GitHub Actions secret `AZURE_STATIC_WEB_APPS_API_TOKEN_HEAVENREPO`.
 
 - **Site:** https://victorious-sky-06718e300.1.azurestaticapps.net/
+- **Time Together:** https://victorious-sky-06718e300.1.azurestaticapps.net/timezone/
 - **Typing game:** https://victorious-sky-06718e300.1.azurestaticapps.net/typing/
 - **Piano rhythm:** https://victorious-sky-06718e300.1.azurestaticapps.net/piano-rhythm/
 
@@ -19,12 +20,18 @@ also been deleted; its separate GitHub source repository is retained.
 ```
 site/            Static site (Azure SWA app root)
   index.html     Landing page — links to the experiments below
+  timezone/      World clocks + cross-timezone collaboration planner (Intl / ES Modules)
   typing/        A typing-practice web app (vanilla JS)
   piano-rhythm/  One-key piano rhythm game (ES Modules / Web Audio / Canvas)
 .github/         CI/CD workflows (Azure Static Web Apps)
 ```
 
 ## Experiments
+
+- **Time Together** (`/timezone/`) — live world clocks, searchable IANA zones,
+  2–4 timezone availability windows, date-aware overlap calculation and copyable
+  results. Handles DST, overnight windows and fractional UTC offsets. See
+  [the timezone guide](site/timezone/README.md).
 
 - **Typing** (`/typing/`) — six-stage Chinese / English typing practice with
   per-key synthesized notes, staff notation, a playable note chart, and current-round
@@ -51,9 +58,10 @@ Node.js 22.12+ and an installed Edge/Chrome browser are required:
 
 ```bash
 npm ci
-npm test             # pure rhythm unit tests + both games' browser checks
+npm test             # rhythm/timezone unit tests + game/timezone browser checks
 npm run test:typing  # typing only
 npm run test:rhythm  # rhythm desktop + emulated touch
+npm run test:timezone # world clocks + collaboration planner desktop/mobile
 ```
 
 The test detects common browser locations; otherwise set `BROWSER_PATH` to the
