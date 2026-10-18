@@ -1,11 +1,16 @@
 # HeavenRepo — Agentic Playground
 
 A personal playground for building and shipping small agent-driven web experiments.
-The `site/` directory is a build-free static site. The existing Azure Static Web
-Apps workflow runs on pushes to `master`, but its original `pages` resource
-(`lemon-sand-0c101b800`) was deleted. Publishing requires reconnecting the workflow
-to an active Static Web App and updating its deployment secret; pushing code alone
-does not restore that site.
+The `site/` directory is a build-free static site deployed to Azure Static Web
+Apps (`heavenrepo`, Free SKU). The [deployment workflow](.github/workflows/deploy-site.yml)
+runs browser regression checks and publishes `site/` on pushes to `master`, or
+when started manually in GitHub Actions. Deployment credentials live only in the
+GitHub Actions secret `AZURE_STATIC_WEB_APPS_API_TOKEN_HEAVENREPO`.
+
+- **Site:** https://victorious-sky-06718e300.1.azurestaticapps.net/
+- **Typing game:** https://victorious-sky-06718e300.1.azurestaticapps.net/typing/
+
+This replaces the deleted `pages` deployment; the separate `xia` site is unchanged.
 
 ## Structure
 
