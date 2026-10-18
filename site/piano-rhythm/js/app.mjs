@@ -127,7 +127,7 @@ async function start() {
     setPhase("countin");
     $("stage").focus({ preventScroll: true });
     if (matchMedia("(max-width: 680px)").matches)
-      window.scrollTo({ top: 0, behavior: "instant" });
+      window.scrollTo({ top: 0, behavior: "auto" });
     if (document.hidden) await pause();
   } catch (error) {
     transport.stop();
@@ -325,7 +325,13 @@ $("hit-pad").addEventListener("pointerdown", (event) => {
   if (!event.isPrimary || event.button !== 0 || pointerHeld !== null) return;
   event.preventDefault();
   pointerHeld = event.pointerId;
-  $("hit-pad").setPointerCapture(event.pointerId);
+  // Capture is optional: some mobile browsers can reject it. The hit and
+  // window-level release handlers must still work when that happens.
+  try {
+    $("hit-pad").setPointerCapture(event.pointerId);
+  } catch {
+    /* pointerup / pointercancel on window still release the held pointer */
+  }
   tap();
 });
 const releasePointer = (event) => {
@@ -383,4 +389,5 @@ window.addEventListener("pagehide", ready);
 
 selectSong();
 setPhase("ready");
+$("start").textContent = "开始演奏 ↗";
 requestAnimationFrame(frame);

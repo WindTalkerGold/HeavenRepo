@@ -9,6 +9,22 @@ export const timeLabel = (seconds) => {
   return `${String(Math.floor(value / 60)).padStart(2, "0")}:${String(value % 60).padStart(2, "0")}`;
 };
 
+// roundRect is missing in Safari before 16 and older mobile Chromium.
+// Keep the fallback local rather than patching the browser's prototype.
+function roundedRect(ctx, x, y, width, height, radius) {
+  if (typeof ctx.roundRect === "function") {
+    ctx.roundRect(x, y, width, height, radius);
+    return;
+  }
+  const r = Math.min(radius, width / 2, height / 2);
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + width, y, x + width, y + height, r);
+  ctx.arcTo(x + width, y + height, x, y + height, r);
+  ctx.arcTo(x, y + height, x, y, r);
+  ctx.arcTo(x, y, x + width, y, r);
+  ctx.closePath();
+}
+
 export class TrackView {
   constructor(canvas) {
     this.canvas = canvas;
@@ -16,16 +32,23 @@ export class TrackView {
     this.reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
     this.bursts = [];
     this.flash = null;
-    this.resizeObserver = new ResizeObserver(() => this.resize());
-    this.resizeObserver.observe(canvas);
+    if (typeof ResizeObserver === "function") {
+      this.resizeObserver = new ResizeObserver(() => this.resize());
+      this.resizeObserver.observe(canvas);
+    } else {
+      window.addEventListener("resize", () => this.resize());
+    }
     this.resize();
   }
 
   resize() {
     const box = this.canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if (this.width === box.width && this.height === box.height && this.dpr === dpr)
+      return;
     this.width = box.width;
     this.height = box.height;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.dpr = dpr;
     this.canvas.width = Math.round(box.width * dpr);
     this.canvas.height = Math.round(box.height * dpr);
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -48,9 +71,15 @@ export class TrackView {
   }
 
   draw(chart, notes, time, active) {
-    const c = this.ctx,
-      w = this.width,
+    const c = this.ctx;
+    let w = this.width,
       h = this.height;
+    // Also catches layout changes (e.g. entering mobile play mode) without RO.
+    if (!this.resizeObserver) {
+      this.resize();
+      w = this.width;
+      h = this.height;
+    }
     if (!w || !h) return;
     c.clearRect(0, 0, w, h);
     const x = w / 2,
@@ -116,7 +145,7 @@ export class TrackView {
             ? "#f4e5ca"
             : chart.song.color;
       c.beginPath();
-      c.roundRect(x - width / 2, y - 12, width, 24, 6);
+      roundedRect(c, x - width / 2, y - 12, width, 24, 6);
       c.fill();
       c.shadowBlur = 0;
       c.fillStyle = "#18303b";
@@ -148,7 +177,8 @@ export class TrackView {
       c.strokeStyle = `rgba(234,200,142,${(1 - phase) * 0.18})`;
       c.lineWidth = 1;
       c.beginPath();
-      c.roundRect(
+      roundedRect(
+        c,
         x - 65 - phase * 15,
         hitY - 17 - phase * 4,
         130 + phase * 30,

@@ -37,7 +37,23 @@ export class PianoTransport {
           this.onInterrupt();
       });
     }
-    await this.ctx.resume();
+    // Invoke resume synchronously in the tap/click call stack for iOS's
+    // user-gesture policy. Some browsers leave its promise pending instead
+    // of rejecting when audio is blocked; never leave the UI loading forever.
+    let timeout;
+    try {
+      await Promise.race([
+        this.ctx.resume(),
+        new Promise((_, reject) => {
+          timeout = setTimeout(
+            () => reject(new Error("音频启动超时，请再次点击开始；如仍失败，请检查浏览器的音频权限。")),
+            5000,
+          );
+        }),
+      ]);
+    } finally {
+      clearTimeout(timeout);
+    }
     if (this.ctx.state !== "running")
       throw new Error("音频尚未启动，请再点一次开始。");
   }

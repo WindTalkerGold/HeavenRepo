@@ -37,6 +37,7 @@ select {
   -webkit-tap-highlight-color: transparent;
 }
 button {
+  touch-action: manipulation;
   cursor: pointer;
 }
 button:disabled {
@@ -745,6 +746,7 @@ dialog {
   border-radius: 18px;
   width: min(440px, calc(100vw - 28px));
   padding: 32px;
+  max-height: 90vh;
   max-height: 90dvh;
   overflow-y: auto;
   box-shadow: 0 30px 100px #0007;
@@ -1048,6 +1050,7 @@ body:has(dialog[open]) {
     margin-top: 16px;
   }
   body.in-session .stage {
+    height: clamp(170px, 34vh, 380px);
     height: clamp(170px, 34dvh, 380px);
   }
   body.in-session .shell {

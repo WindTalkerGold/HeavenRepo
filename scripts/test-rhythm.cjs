@@ -226,9 +226,84 @@ async function main() {
       ),
       false,
     );
+    // Older mobile engines must remain playable, not just render the HTML.
+    // Removing APIs exercises the exact fallback paths on our installed Edge.
+    const compatible = await browser.newPage();
+    watch(compatible);
+    await compatible.setViewport({
+      width: 390, height: 844, isMobile: true, hasTouch: true,
+    });
+    await compatible.evaluateOnNewDocument(() => {
+      CanvasRenderingContext2D.prototype.roundRect = undefined;
+      window.ResizeObserver = undefined;
+      Element.prototype.setPointerCapture = function () {
+        throw new DOMException("Capture unavailable", "NotFoundError");
+      };
+      // Older Safari accepts auto/smooth, but not the nonstandard instant.
+      const scrollTo = window.scrollTo.bind(window);
+      window.scrollTo = (options) => {
+        if (options.behavior === "instant") throw new TypeError("Invalid ScrollBehavior");
+        scrollTo(options);
+      };
+    });
+    await compatible.goto(base + "/piano-rhythm/", { waitUntil: "networkidle0" });
+    await compatible.tap('[data-song="joy"]');
+    assert.equal(await compatible.$eval('[data-song="joy"]', n => n.getAttribute("aria-pressed")), "true");
+    await compatible.tap("#start");
+    await compatible.waitForSelector('#stage[data-phase="countin"]');
+    // If rendering throws, count-in never transitions to playing.
+    await compatible.waitForSelector('#stage[data-phase="playing"]');
+    await compatible.tap("#hit-pad");
+    assert.match(await compatible.$eval("#feedback strong", n => n.textContent), /PERFECT|GOOD/);
+    await compatible.tap("#hit-pad");
+    assert.equal(await compatible.$eval("#hit-pad", n => n.dataset.judgment), "stray");
+    await compatible.tap("#pause");
+    await compatible.waitForSelector('#stage[data-phase="paused"]');
+    await compatible.tap("#pause");
+    await compatible.waitForSelector('#stage[data-phase="playing"]');
+    await compatible.tap("#back");
+    await compatible.close();
+
+    const blockedAudio = await browser.newPage();
+    watch(blockedAudio);
+    await blockedAudio.evaluateOnNewDocument(() => {
+      const resume = AudioContext.prototype.resume;
+      let blocked = true;
+      AudioContext.prototype.resume = function () {
+        if (blocked) {
+          blocked = false;
+          return new Promise(() => {});
+        }
+        return resume.call(this);
+      };
+    });
+    await blockedAudio.goto(base + "/piano-rhythm/", { waitUntil: "networkidle0" });
+    await blockedAudio.click("#start");
+    await blockedAudio.waitForSelector('#stage[data-phase="loading"]');
+    await blockedAudio.waitForSelector('#stage[data-phase="ready"]', { timeout: 8000 });
+    assert.match(await blockedAudio.$eval("#notice", n => n.textContent), /音频启动超时/);
+    assert.equal(await blockedAudio.$eval("#start", n => n.disabled), false);
+    await blockedAudio.click("#start");
+    await blockedAudio.waitForSelector('#stage[data-phase="countin"]');
+    await blockedAudio.click("#back");
+    await blockedAudio.close();
+
+    // Module load errors used to leave enabled but completely inert buttons.
+    const brokenModule = await browser.newPage();
+    await brokenModule.setRequestInterception(true);
+    brokenModule.on("request", request => {
+      if (request.url().endsWith("/view.mjs")) request.abort();
+      else request.continue();
+    });
+    await brokenModule.goto(base + "/piano-rhythm/", { waitUntil: "networkidle0" });
+    await brokenModule.waitForFunction(() => document.getElementById("notice").textContent.includes("游戏初始化失败"));
+    assert.equal(await brokenModule.$eval("#start", n => n.disabled), true);
+    assert.equal(await brokenModule.$eval("#start", n => n.textContent), "游戏加载失败");
+    await brokenModule.close();
+
     assert.deepEqual(errors, []);
     console.log(
-      "PASS: desktop Space, repeat protection, audio clock, pause/resume/blur, touch down, portrait fit, wrong/missed feedback, full result/retry, no history.",
+      "PASS: desktop Space, repeat protection, audio clock, pause/resume/blur, touch down, portrait fit, wrong/missed feedback, full result/retry, no history, missing mobile APIs, rejected pointer capture, audio timeout/retry, module failure notice.",
     );
   } finally {
     if (browser) await browser.close();

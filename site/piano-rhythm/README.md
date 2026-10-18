@@ -36,6 +36,7 @@
 ```text
 index.html           页面骨架、触屏大按键、语义控件、结果 dialog
 style.css            响应式布局；手机演奏模式；减少动画偏好
+js/boot.js           模块加载入口；加载超时/初始化失败的可见提示
 js/songs.mjs         公版旋律新编谱面 + 节拍时间轴编译
 js/engine.mjs        纯判定/计分模型，与浏览器和帧率无关
 js/audio.mjs         Web Audio 时钟、提前调度、暂停、合成琴声
@@ -50,10 +51,15 @@ js/app.mjs           状态机、界面绑定、统一输入、暂停/结算协�
   Canvas 使用 requestAnimationFrame 查询同一时间轴，不累加帧间隔计分。
 - **输入**：`keydown` 与 `pointerdown` 调用同一个判定入口。忽略键盘自动重复、
   非主触点和点击后的重复事件，按下立即判定，不等待 click / 抬手。
-  大按钮禁用触摸滚动和长按菜单；其余页面正常滚动。
+  大按钮禁用触摸滚动和长按菜单；其余页面正常滚动。触摸捕获失败时仍执行判定，
+  由窗口的 pointerup / pointercancel 释放按键状态。
 - **暂停**：挂起音频上下文和调度器，保留已调度的音符与当前进度；切换页面/曲目时清理声音。
 - **触屏**：窄屏演奏时隐藏曲库，采用动态视口高度和安全区；支持减少动画偏好。
   仍保留下落音符等必要节奏信息，关闭装饰粒子/抖动动画。
+- **兼容与错误提示**：缺少 Canvas `roundRect` 时改用圆弧绘制，缺少 `ResizeObserver`
+  时检测画布布局变化；`dvh` 不可用时回退到 `vh`。页面滚动使用标准 `auto`。
+  模块加载完成前禁用开始按钮，加载/初始化失败显示错误；音频恢复超过 5 秒则提示重试，
+  不让界面一直停在「琴声准备中」。`AudioContext.resume()` 仍在用户点击调用栈内执行。
 - `../staticwebapp.config.json` 声明 `.mjs` MIME 类型，确保 Azure 可加载 ES Modules。
 
 ## 运行与测试
@@ -73,5 +79,7 @@ npm test             # 包含原打字游戏的全部回归
 
 浏览器测试使用已安装的 Edge/Chrome，找不到时设置 `BROWSER_PATH`。
 可选 `SCREENSHOT_DIR` 保存桌面、手机和结果截图，不保存到静态站点目录。
-触屏已通过 Chromium 移动设备模拟测试；真实 iOS/Android 的扬声器、蓝牙延迟和系统中断
+回归包含：Chromium 模拟触屏、移除 `roundRect` / `ResizeObserver` 的兼容路径、
+触摸捕获抛错、音频恢复一直 pending 时的超时与重试、模块请求失败时的可见提示。
+这些是兼容场景模拟，不等同于真实 Safari/WebKit 验证。真实 iOS/Android 的扬声器、蓝牙延迟和系统中断
 仍建议实机体验，根据需要微调延迟。无 Web Audio 时会显示提示，不会假装已开始演奏。

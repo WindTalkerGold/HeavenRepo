@@ -14,7 +14,7 @@
     <title>一键成曲 · Piano Rhythm</title>
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="style.css" />
-    <script type="module" src="js/app.mjs"></script>
+    <script defer src="js/boot.js"></script>
   </head>
   <body>
     <div class="shell">
@@ -170,8 +170,8 @@
               ><span class="pad-indicator" aria-hidden="true"></span>
             </button>
             <div class="transport">
-              <button id="start" class="primary-button" type="button">
-                开始演奏 <span>↗</span></button
+              <button id="start" class="primary-button" type="button" disabled>
+                游戏加载中…</button
               ><button id="pause" class="quiet-button" type="button" disabled>
                 暂停</button
               ><button id="back" class="quiet-button" type="button" disabled>
