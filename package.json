@@ -1,0 +1,13 @@
+{
+  "name": "heavenrepo-checks",
+  "private": true,
+  "scripts": {
+    "test": "node scripts/test-typing.cjs"
+  },
+  "devDependencies": {
+    "puppeteer-core": "25.3.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

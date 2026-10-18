@@ -105,6 +105,90 @@ h1 .sub { color: var(--muted); font-size: 13px; font-weight: 400; margin-left: 8
 .target-box.flash-bad { box-shadow: inset 0 0 0 3px var(--bad); }
 .target-box.flash-ok { box-shadow: inset 0 0 0 3px var(--accent2); }
 
+.note-badge {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent2);
+  font-family: "Consolas", monospace;
+  min-height: 18px;
+  opacity: .9;
+  pointer-events: none;
+}
+.note-badge.pulse { animation: notePulse .4s ease; }
+@keyframes notePulse {
+  0% { transform: scale(1.35); opacity: 1; }
+  100% { transform: scale(1); opacity: .9; }
+}
+
+/* Live staff under the target */
+.staff-panel {
+  margin-top: 14px;
+  min-height: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.staff-panel .staff-svg { display: block; }
+.staff-panel .staff-cap {
+  font-family: "Consolas", monospace;
+  font-size: 14px;
+  color: var(--accent2);
+  font-weight: 600;
+}
+
+/* Note chart */
+.notechart { display: none; }
+.notechart.active { display: block; }
+.notechart h3 { margin: 0 0 4px; font-size: 16px; color: var(--accent); }
+.notechart .nc-sub { color: var(--muted); font-size: 12px; margin-bottom: 14px; }
+.nc-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+.nc-cell {
+  background: var(--card);
+  border: 1px solid #2c3358;
+  border-radius: 10px;
+  padding: 8px 4px 6px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  transition: transform .1s ease, border-color .1s ease, background .1s ease;
+}
+.nc-cell:hover { transform: translateY(-2px); border-color: var(--accent); background: #2a3157; }
+.nc-cell:focus-visible { border-color: var(--accent2); }
+.nc-cell.playing {
+  border-color: var(--accent2);
+  background: #2c3a58;
+  animation: cellPlay .42s ease;
+}
+@keyframes cellPlay {
+  0%   { transform: scale(1.06); box-shadow: 0 0 0 2px var(--accent2); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(6,214,160,0); }
+}
+.nc-cell .nc-key {
+  position: absolute; top: 6px; left: 8px;
+  font-weight: 700; font-size: 15px; color: var(--accent);
+  font-family: "Consolas", monospace;
+}
+.nc-cell .nc-staff { display: flex; justify-content: center; }
+.nc-cell .nc-note {
+  font-family: "Consolas", monospace; font-size: 12px; color: var(--muted); margin-top: 2px;
+}
+.nc-cell .nc-hz {
+  font-family: "Consolas", monospace; font-size: 10px; color: #6b74a3; margin-top: 1px;
+}
+@media (max-width: 640px) {
+  .nc-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
 .timer-line { margin-top: 18px; font-size: 13px; color: var(--muted); text-align: center; }
 .timer-line b { color: var(--accent); }
 

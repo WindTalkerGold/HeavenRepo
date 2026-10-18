@@ -1,5 +1,6 @@
 # ---- Runtime / generated data ----
-# Typing app stores scores in the browser's localStorage, not files.
+# Personal score exports (the app also supports optional local JSON files).
+typing-scores*.json
 
 # ---- Node / build artifacts ----
 node_modules/
