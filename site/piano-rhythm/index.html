@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#101923" />
+    <meta
+      name="description"
+      content="只用一个按键，跟着经典钢琴旋律练节奏。支持空格、鼠标和触屏，不保存历史成绩。"
+    />
+    <title>一键成曲 · Piano Rhythm</title>
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="js/app.mjs"></script>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="site-header">
+        <a class="home-link" href="../" aria-label="返回 HeavenRepo 首页"
+          >← PLAYGROUND</a
+        >
+        <span class="edition"
+          >THE ONE-KEY PIANO CLUB <span class="status-dot"></span
+        ></span>
+        <button
+          id="mute"
+          class="quiet-button"
+          type="button"
+          aria-pressed="false"
+        >
+          声音 · 开
+        </button>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="title">
+          <div>
+            <p class="eyebrow">PIANO RHYTHM / 01</p>
+            <h1 id="title">一键<span>成曲。</span></h1>
+          </div>
+          <p class="intro-copy">
+            不必认识每一个音符。<br />听见旋律，<em>按下节奏。</em>
+          </p>
+        </section>
+
+        <div class="game-layout">
+          <aside class="library" aria-label="曲目与设置">
+            <div class="section-heading">
+              <h2>今日曲单</h2>
+              <span>4 SELECTIONS</span>
+            </div>
+            <div id="songs" class="song-list"></div>
+            <div class="settings">
+              <div class="section-heading">
+                <h2>演奏设置</h2>
+                <span>MAKE IT YOURS</span>
+              </div>
+              <label class="setting-row" for="speed"
+                ><span>练习速度</span
+                ><select id="speed">
+                  <option value="0.75">0.75× · 慢练</option>
+                  <option value="1" selected>1.00× · 原速</option>
+                  <option value="1.25">1.25× · 挑战</option>
+                </select></label
+              >
+              <label class="setting-row" for="metronome"
+                ><span>演奏时的节拍器</span
+                ><input id="metronome" type="checkbox"
+              /></label>
+              <label class="offset-label" for="offset"
+                >延迟微调
+                <output id="offset-value" for="offset">0 ms</output></label
+              >
+              <input
+                id="offset"
+                type="range"
+                min="-250"
+                max="250"
+                step="10"
+                value="0"
+                aria-describedby="offset-help"
+              />
+              <p id="offset-help" class="setting-hint">
+                总是显示「太晚」？向右微调判定时间。推荐外放或有线耳机，蓝牙可能有延迟。
+              </p>
+            </div>
+            <div class="library-note">
+              <span>♪</span>
+              <p>公版旋律 · 简化钢琴节选<br />实时合成琴声，不保存演奏记录。</p>
+            </div>
+          </aside>
+
+          <section class="session" aria-label="节奏演奏区">
+            <header class="track-header">
+              <div>
+                <p class="eyebrow">NOW ON THE PIANO</p>
+                <h2 id="song-title">小星星</h2>
+                <p id="song-credit"></p>
+              </div>
+              <div class="tempo-badge">
+                <strong id="bpm">100</strong><span>BPM</span>
+              </div>
+            </header>
+            <div class="scoreboard" aria-label="本轮状态">
+              <div>
+                <span class="stat-label">SCORE / 得分</span
+                ><strong id="score">000000</strong>
+              </div>
+              <div>
+                <span class="stat-label">COMBO / 连击</span
+                ><strong id="combo">0<span> ×</span></strong>
+              </div>
+              <div>
+                <span class="stat-label">ACCURACY / 准确率</span
+                ><strong id="accuracy">—</strong>
+              </div>
+            </div>
+
+            <div
+              id="stage"
+              class="stage"
+              data-phase="ready"
+              tabindex="0"
+              aria-label="音符下落区，按空格或下方节拍键演奏"
+            >
+              <canvas
+                id="track"
+                aria-label="音符向下移动，抵达金色判定线时点按一次。长音也只需点按一次。"
+              ></canvas>
+              <div class="lane-caption">
+                <span>SINGLE KEY · SINGLE MOMENT</span
+                ><span id="note-count"></span>
+              </div>
+              <div id="feedback" class="feedback" aria-hidden="true">
+                <strong></strong><span></span>
+              </div>
+              <div id="cover" class="cover">
+                <span class="cover-mark">♩</span>
+                <h3 id="cover-title">让每一拍，刚刚好。</h3>
+                <p id="cover-copy">音符落到金线，轻轻按一下。</p>
+              </div>
+              <div id="countdown" class="countdown" hidden>
+                <span>准备跟上</span><strong id="count-value">4</strong>
+              </div>
+              <div class="hit-label">HIT HERE <span>↓</span> 在金线相遇</div>
+            </div>
+
+            <div class="timeline">
+              <progress
+                id="progress"
+                value="0"
+                max="1"
+                aria-label="曲目进度"
+              ></progress
+              ><span id="time">00:00 / 00:00</span>
+            </div>
+            <button
+              id="hit-pad"
+              class="hit-pad"
+              type="button"
+              disabled
+              aria-label="节拍键，按下时击打一个音符"
+            >
+              <span class="pad-icon" aria-hidden="true">⌁</span
+              ><span class="pad-title"
+                >点 按 节 拍<span>TOUCH / CLICK / <kbd>SPACE</kbd></span></span
+              ><span class="pad-indicator" aria-hidden="true"></span>
+            </button>
+            <div class="transport">
+              <button id="start" class="primary-button" type="button">
+                开始演奏 <span>↗</span></button
+              ><button id="pause" class="quiet-button" type="button" disabled>
+                暂停</button
+              ><button id="back" class="quiet-button" type="button" disabled>
+                结束 / 选曲
+              </button>
+            </div>
+            <p id="session-hint" class="session-hint">
+              4 拍预备后开始 · 每个音符点一下，不用长按
+            </p>
+            <p id="notice" class="notice" role="status" aria-live="polite"></p>
+          </section>
+        </div>
+
+        <section class="guide" aria-label="玩法与判定规则">
+          <div>
+            <span class="guide-number">01</span>
+            <p>
+              <strong>先听，再落指</strong
+              ><span>金线是时机，不是看见音符就按。空白处是休止。</span>
+            </p>
+          </div>
+          <div>
+            <span class="guide-number">02</span>
+            <p>
+              <strong><i class="mint-dot"></i> PERFECT · ±55 ms</strong
+              ><span>精准 +100，GOOD（±125 ms）+70，连击另有加成。</span>
+            </p>
+          </div>
+          <div>
+            <span class="guide-number">03</span>
+            <p>
+              <strong><i class="red-dot"></i> 错拍，也是一种练习</strong
+              ><span>漏拍断连；空按 −30 并断连。切到后台自动暂停。</span>
+            </p>
+          </div>
+        </section>
+      </main>
+      <footer>
+        FOUR FAMILIAR MELODIES. ONE LITTLE KEY.<span
+          >没有排行榜，只有这一刻的节奏。</span
+        >
+      </footer>
+    </div>
+
+    <dialog id="results" aria-labelledby="result-title">
+      <p class="eyebrow">A LITTLE ENCORE?</p>
+      <h2 id="result-title">这一曲，属于你。</h2>
+      <div class="result-hero">
+        <strong id="grade">A</strong>
+        <div>
+          <span>本轮得分</span><b id="result-score">0</b>
+          <p id="result-song"></p>
+        </div>
+      </div>
+      <div class="result-stats">
+        <div>准确率<strong id="result-accuracy"></strong></div>
+        <div>最高连击<strong id="result-combo"></strong></div>
+      </div>
+      <div id="result-counts" class="result-counts"></div>
+      <p id="result-advice"></p>
+      <div class="result-actions">
+        <button id="retry" class="primary-button" type="button">
+          再弹一次 ↗</button
+        ><button id="choose" class="quiet-button" type="button">
+          返回选曲
+        </button>
+      </div>
+      <p class="no-history">仅本轮结果 · 不保存历史成绩</p>
+    </dialog>
+    <noscript>这个游戏需要 JavaScript 和支持 Web Audio 的浏览器。</noscript>
+  </body>
+</html>

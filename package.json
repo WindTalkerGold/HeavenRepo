@@ -2,7 +2,10 @@
   "name": "heavenrepo-checks",
   "private": true,
   "scripts": {
-    "test": "node scripts/test-typing.cjs"
+    "test": "npm run test:unit && npm run test:typing && npm run test:rhythm",
+    "test:unit": "node --test scripts/rhythm-core.test.mjs",
+    "test:typing": "node scripts/test-typing.cjs",
+    "test:rhythm": "node scripts/test-rhythm.cjs"
   },
   "devDependencies": {
     "puppeteer-core": "25.3.0"

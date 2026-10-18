@@ -24,7 +24,7 @@ jobs:
           cache: npm
       - name: Install test dependencies
         run: npm ci --ignore-scripts --no-audit --no-fund
-      - name: Run typing browser regression checks
+      - name: Run game unit and browser regression checks
         run: npm test
       - name: Deploy site to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
