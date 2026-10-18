@@ -10,7 +10,8 @@ GitHub Actions secret `AZURE_STATIC_WEB_APPS_API_TOKEN_HEAVENREPO`.
 - **Site:** https://victorious-sky-06718e300.1.azurestaticapps.net/
 - **Typing game:** https://victorious-sky-06718e300.1.azurestaticapps.net/typing/
 
-This replaces the deleted `pages` deployment; the separate `xia` site is unchanged.
+This replaces the deleted `pages` deployment. The obsolete `xia` Azure site has
+also been deleted; its separate GitHub source repository is retained.
 
 ## Structure
 
@@ -24,8 +25,8 @@ site/            Static site (Azure SWA app root)
 ## Experiments
 
 - **Typing** (`/typing/`) — six-stage Chinese / English typing practice with
-  per-key synthesized notes, staff notation, a playable note chart, and local
-  high scores. See [the typing guide](site/typing/README.md).
+  per-key synthesized notes, staff notation, a playable note chart, and current-round
+  results only (no saved history). See [the typing guide](site/typing/README.md).
 - **AI Efficiency V2** (`/ai-efficiency-v2/`) — interactive presentation.
 - **View HTML** (`/view-html/`) — offline ZIP presentation viewer.
 

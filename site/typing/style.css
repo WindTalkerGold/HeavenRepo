@@ -41,9 +41,6 @@ header {
 }
 h1 { margin: 0; font-size: 22px; letter-spacing: .5px; }
 h1 .sub { color: var(--muted); font-size: 13px; font-weight: 400; margin-left: 8px; }
-.filestatus { font-size: 12px; color: var(--muted); }
-.filestatus.ok { color: var(--accent2); }
-.filestatus.warn { color: var(--accent); }
 
 /* Menu */
 .menu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
@@ -62,7 +59,6 @@ h1 .sub { color: var(--muted); font-size: 13px; font-weight: 400; margin-left: 8
 }
 .stage-card .title { font-size: 17px; font-weight: 600; }
 .stage-card .desc { color: var(--muted); font-size: 13px; margin-top: 8px; line-height: 1.5; }
-.stage-card .best { color: var(--accent2); font-size: 12px; margin-top: 10px; }
 
 /* Practice view */
 .practice { display: none; }
@@ -200,7 +196,6 @@ h1 .sub { color: var(--muted); font-size: 13px; font-weight: 400; margin-left: 8
 .results h2 { margin: 6px 0 4px; }
 .results .big { font-size: 54px; font-weight: 800; color: var(--accent); }
 .results .sub { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
-.newbest { color: var(--accent2); font-weight: 700; }
 .btns { display: flex; gap: 10px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
 
 button {
@@ -219,17 +214,6 @@ button:hover { filter: brightness(1.08); }
 button:active { transform: scale(.97); }
 button.ghost { background: transparent; color: var(--text); border: 1px solid #3a4170; }
 button.ghost:hover { border-color: var(--accent); }
-
-/* Leaderboard */
-.leaderboard { display: none; }
-.leaderboard.active { display: block; }
-.lb-stage { margin-bottom: 18px; }
-.lb-stage h3 { margin: 0 0 8px; font-size: 15px; color: var(--accent); }
-.lb-stage table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.lb-stage th, .lb-stage td { padding: 6px 8px; text-align: left; border-bottom: 1px solid #2c3358; }
-.lb-stage th { color: var(--muted); font-weight: 500; }
-.lb-stage td.t { font-family: monospace; }
-.lb-stage .empty { color: var(--muted); font-size: 12px; }
 
 .ime-input {
   margin-top: 18px;

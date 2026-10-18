@@ -39,10 +39,33 @@ async function main() {
     page.on('response', r => { if (r.status() >= 400 && !r.url().endsWith('/favicon.ico')) errors.push(`${r.status()} ${r.url()}`); });
     const base = `http://127.0.0.1:${server.address().port}`;
     await page.goto(base, { waitUntil: 'networkidle0' });
+    // Seed legacy records to verify the new version removes only its own history.
+    await page.evaluate(async () => {
+      localStorage.setItem('typing_scores', JSON.stringify({ 1: [{ time: 123, date: '2026-01-01' }] }));
+      localStorage.setItem('unrelated_setting', 'keep');
+      await new Promise((resolve, reject) => {
+        const request = indexedDB.open('typing_scores', 1);
+        request.onupgradeneeded = () => request.result.createObjectStore('kv');
+        request.onsuccess = () => { request.result.close(); resolve(); };
+        request.onerror = () => reject(request.error);
+      });
+    });
+    await page.evaluateOnNewDocument(() => {
+      window.historyWrites = [];
+      const setItem = Storage.prototype.setItem;
+      Storage.prototype.setItem = function(key, value) {
+        if(key === 'typing_scores') window.historyWrites.push(key);
+        return setItem.call(this, key, value);
+      };
+    });
     await page.click('a[href="typing/"]');
     await page.waitForSelector('#menu .stage-card');
     assert.equal(await page.$$eval('#menu .stage-card', els => els.length), 6);
     assert.equal(await page.evaluate(() => Object.keys(window.NOTE_MAP).length), 36);
+    assert.equal(await page.evaluate(() => localStorage.getItem('typing_scores')), null);
+    assert.equal(await page.evaluate(() => localStorage.getItem('unrelated_setting')), 'keep');
+    await page.waitForFunction(async () => !(await indexedDB.databases()).some(db => db.name === 'typing_scores'));
+    assert.equal(await page.$('#leaderboard, #filestatus, #btnLeaderboard, #btnPickFile, #btnExport, #btnReset, .stage-card .best'), null);
 
     // Complete a real keyboard-driven round, including transition-time duplicate input.
     await page.click('#menu .stage-card');
@@ -62,9 +85,13 @@ async function main() {
       await delay(230);
     }
     assert.ok(await page.$('#results.active'));
-    assert.equal(await page.evaluate(() => scores[1].length), 10);
+    assert.equal(await page.evaluate(() => roundTimes.length), 20);
+    assert.match(await page.$eval('#resSub', el => el.textContent), /20/);
+    assert.equal(await page.evaluate(() => localStorage.getItem('typing_scores')), null);
+    assert.deepEqual(await page.evaluate(() => window.historyWrites), []);
     await page.reload({ waitUntil: 'networkidle0' });
-    assert.equal(await page.evaluate(() => scores[1].length), 10, 'scores survive reload');
+    assert.equal(await page.evaluate(() => roundTimes.length), 0, 'round results must not survive reload');
+    assert.equal(await page.evaluate(() => localStorage.getItem('typing_scores')), null);
 
     // Cancel a pending transition and verify it cannot restart the practice timer.
     await page.click('#menu .stage-card');
@@ -126,14 +153,14 @@ async function main() {
     const enabled = await page.evaluate(() => window.SoundFX.enabled);
     await page.reload({ waitUntil: 'networkidle0' });
     assert.equal(await page.evaluate(() => window.SoundFX.enabled), enabled);
-    await page.click('#btnLeaderboard');
-    assert.ok(await page.$('#leaderboard.active table'));
+    assert.equal(await page.evaluate(() => localStorage.getItem('typing_scores')), null);
+    assert.deepEqual(await page.evaluate(() => window.historyWrites), []);
 
     // Static files also work without a local web server.
     await page.goto(pathToFileURL(path.join(root, 'typing/index.html')).href, { waitUntil: 'load' });
     assert.equal(await page.$$eval('#menu .stage-card', els => els.length), 6);
     assert.deepEqual(errors, []);
-    console.log('PASS: menu, sound/staff, round completion, penalties, persistence, words/sentences, IME, transitions, leaderboard, file://');
+    console.log('PASS: menu, sound/staff, round completion, penalties, no saved history, legacy cleanup, words/sentences, IME, transitions, file://');
   } finally {
     if (browser) await browser.close();
     await new Promise(resolve => server.close(resolve));

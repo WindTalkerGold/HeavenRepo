@@ -33,7 +33,6 @@ loadData();
 const STAGES = getStages();
 
 /* ========= 状态 ========= */
-let scores = loadMirror();      // { "<id>": [ {time, date}, ... ] }
 let current = null;             // 当前 stage 配置
 let queue = [];                 // 本轮题目
 let qIdx = 0;
@@ -52,7 +51,6 @@ const $ = (id) => document.getElementById(id);
 const menuEl = $("menu");
 const practiceEl = $("practice");
 const resultsEl = $("results");
-const lbEl = $("leaderboard");
 const targetEl = $("target");
 const targetBox = $("targetBox");
 const noteBadge = $("noteBadge");
@@ -65,10 +63,6 @@ const progressEl = $("progress");
 const stageLabel = $("stageLabel");
 
 /* ========= 工具 ========= */
-function fmt(ms){
-  return (ms/1000).toFixed(2) + " 秒";
-}
-function nowISO(){ return new Date().toISOString(); }
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
 function pick(stage){
@@ -93,140 +87,22 @@ function toast(msg, bad){
   toast._t = setTimeout(()=> t.className = "toast" + (bad?" bad":""), 1600);
 }
 
-/* ========= 成绩持久化 ========= */
-const IDB_DB = "typing_scores";
-const IDB_STORE = "kv";
-const IDB_KEY = "fileHandle";
-
-function idbOpen(){
-  return new Promise((res, rej)=>{
-    if(!indexedDB){ rej(new Error("no idb")); return; }
-    const r = indexedDB.open(IDB_DB, 1);
-    r.onupgradeneeded = ()=> r.result.createObjectStore(IDB_STORE);
-    r.onsuccess = ()=> res(r.result);
-    r.onerror = ()=> rej(r.error);
-  });
-}
-async function idbGet(key){
-  try{ const db = await idbOpen(); return await new Promise((res,rej)=>{ const tx=db.transaction(IDB_STORE,"readonly"); const rq=tx.objectStore(IDB_STORE).get(key); rq.onsuccess=()=>res(rq.result); rq.onerror=()=>rej(rq.error); }); }catch(e){ return undefined; }
-}
-async function idbSet(key, val){
-  try{ const db = await idbOpen(); await new Promise((res,rej)=>{ const tx=db.transaction(IDB_STORE,"readwrite"); tx.objectStore(IDB_STORE).put(val,key); tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error); }); }catch(e){}
-}
-
-let fileHandle = null;
-let hasFilePermission = false;
-let fsSupported = typeof window !== "undefined" && "showSaveFilePicker" in window;
-
-function loadMirror(){
-  try{ return JSON.parse(localStorage.getItem("typing_scores") || "{}"); }
-  catch(e){ return {}; }
-}
-function saveMirror(){
-  try{ localStorage.setItem("typing_scores", JSON.stringify(scores)); }catch(e){}
-}
-
-async function persist(){
-  saveMirror();
-  if(fileHandle && hasFilePermission){
-    try{
-      const w = await fileHandle.createWritable();
-      await w.write(JSON.stringify(scores, null, 2));
-      await w.close();
-    }catch(e){ console.warn("write file failed", e); }
-  }
-}
-
-async function ensureFilePermissions(){
-  if(!fileHandle) return false;
-  const opts = { mode: "readwrite" };
-  if(await fileHandle.queryPermission(opts) === "granted") return true;
-  if(await fileHandle.requestPermission(opts) === "granted") return true;
-  return false;
-}
-
-async function readScoresFromHandle(){
-  try{
-    const f = await fileHandle.getFile();
-    const txt = await f.text();
-    if(txt && txt.trim()){
-      const obj = JSON.parse(txt);
-      for(const k of Object.keys(obj)){ scores[k] = obj[k]; }
-    }
-  }catch(e){ console.warn("read file failed", e); }
-}
-
-async function pickFile(){
-  if(!fsSupported){
-    toast("当前浏览器不支持文件写入，已用本地存储保存", true);
-    return;
-  }
-  try{
-    const h = await window.showSaveFilePicker({
-      suggestedName: "typing-scores.json",
-      types: [{ description: "JSON 成绩文件", accept: { "application/json": [".json"] } }]
-    });
-    fileHandle = h;
-    hasFilePermission = true;
-    await idbSet(IDB_KEY, h);
-    await readScoresFromHandle();
-    await persist();
-    updateFileStatus();
-    toast("成绩文件已连接");
-    renderMenu();
-  }catch(e){
-    if(e && e.name !== "AbortError") toast("选择文件失败", true);
-  }
-}
-
-async function initFile(){
-  if(!fsSupported){ updateFileStatus(); return; }
-  try{
-    const h = await idbGet(IDB_KEY);
-    if(h){ fileHandle = h; }
-  }catch(e){}
-  if(fileHandle){
-    try {
-      const ok = await ensureFilePermissions();
-      if(ok){
-        hasFilePermission = true;
-        await readScoresFromHandle();
-        saveMirror();
-      }
-    } catch (e) {
-      console.warn("Failed to ensure file permissions on load:", e);
-    }
-  }
-  updateFileStatus();
-}
-
-function updateFileStatus(){
-  const el = $("filestatus");
-  if(!fsSupported){
-    el.textContent = "本地存储模式（浏览器不支持文件写入）";
-    el.className = "filestatus warn";
-  } else if(fileHandle && hasFilePermission){
-    el.textContent = "成绩文件：已连接 " + (fileHandle.name || "scores.json");
-    el.className = "filestatus ok";
-  } else {
-    el.textContent = "成绩文件：未连接（点击下方选择/新建）";
-    el.className = "filestatus warn";
-  }
+/* ========= 清理旧版成绩（不再读取、保存历史，也不访问本地文件） ========= */
+function clearLegacyScores(){
+  try{ localStorage.removeItem("typing_scores"); }catch(e){}
+  try{ window.indexedDB.deleteDatabase("typing_scores"); }catch(e){}
 }
 
 /* ========= 菜单 ========= */
 function renderMenu(){
   hideAll(); menuEl.style.display = "grid";
-  lbEl.classList.remove("active"); lbEl.innerHTML = "";
   menuEl.innerHTML = "";
   STAGES.forEach(s=>{
     const card = document.createElement("div");
     card.className = "stage-card";
-    const best = bestOf(s.id);
     card.innerHTML =
       `<span class="num">${s.id}</span><span class="title">${s.title}</span>` +
-      `<div class="desc">${s.desc}</div>` +
-      `<div class="best">最快：${best ? fmt(best) : "暂无"}　·　共 ${countOf(s.id)} 次记录</div>`;
+      `<div class="desc">${s.desc}</div>`;
     card.onclick = ()=> startStage(s);
     menuEl.appendChild(card);
   });
@@ -240,45 +116,9 @@ function hideAll(){
   menuEl.style.display = "none";
   practiceEl.classList.remove("active");
   resultsEl.classList.remove("active");
-  lbEl.classList.remove("active");
   if(noteChartEl) noteChartEl.classList.remove("active");
   if(scaleTimer){ clearInterval(scaleTimer); scaleTimer = null; }
 }
-function bestOf(id){ const a = scores[id] || []; return a.length ? a[0].time : null; }
-function countOf(id){ return (scores[id] || []).length; }
-function addScore(id, time){
-  const a = scores[id] || [];
-  a.push({ time: Math.round(time), date: nowISO() });
-  a.sort((x,y)=> x.time - y.time);
-  scores[id] = a.slice(0, 10);
-  persist();
-}
-
-/* ========= 排行榜 ========= */
-function renderLeaderboard(){
-  hideAll();
-  lbEl.classList.add("active");
-  lbEl.innerHTML = "";
-  STAGES.forEach(s=>{
-    const a = scores[s.id] || [];
-    const div = document.createElement("div");
-    div.className = "lb-stage";
-    let rows = "";
-    if(a.length === 0){
-      rows = `<div class="empty">还没有成绩，去练一练吧！</div>`;
-    } else {
-      rows = "<table><tr><th>#</th><th>成绩</th><th>日期</th></tr>";
-      a.forEach((r,i)=>{
-        rows += `<tr><td>${i+1}</td><td class="t">${fmt(r.time)}</td><td class="t">${r.date.slice(0,16).replace("T"," ")}</td></tr>`;
-      });
-      rows += "</table>";
-    }
-    div.innerHTML = `<h3>阶段 ${s.id} · ${s.title}</h3>${rows}`;
-    lbEl.appendChild(div);
-  });
-  lbEl.innerHTML += `<div class="btns"><button class="ghost" onclick="renderMenu()">返回菜单</button></div>`;
-}
-
 /* ========= 音符对照表（每个键 -> 音符 + 五线谱，可点击试听） ========= */
 function renderNoteChart(){
   hideAll();
@@ -521,7 +361,6 @@ function handleReact(key){
     const t = performance.now() - itemStart + itemPenalty;
     targetBox.classList.add("flash-ok");
     roundTimes.push(t);
-    addScore(current.id, t);
     qIdx++;
     scheduleNextItem(180);
   } else {
@@ -547,7 +386,6 @@ function handleWord(key){
       clearInterval(timerInterval);
       const t = performance.now() - itemStart + itemPenalty;
       roundTimes.push(t);
-      addScore(current.id, t);
       qIdx++;
       targetBox.classList.add("flash-ok");
       scheduleNextItem(220);
@@ -580,7 +418,6 @@ function checkIme(){
     clearInterval(timerInterval);
     const t = performance.now() - itemStart + itemPenalty;
     roundTimes.push(t);
-    addScore(current.id, t);
     qIdx++;
     targetBox.classList.add("flash-ok");
     scheduleNextItem(220);
@@ -601,12 +438,9 @@ function finishRound(){
   const times = roundTimes.slice();
   const avg = times.length ? times.reduce((a,b)=>a+b,0)/times.length : 0;
   const best = times.length ? Math.min(...times) : 0;
-  const prevBest = (() => { const a = scores[current.id]||[]; return a.length? a[0].time : Infinity; })();
-  const isBest = best <= prevBest && times.length>0;
   $("resTitle").textContent = `阶段 ${current.id} 完成！`;
   $("resBig").innerHTML = `平均 ${(avg/1000).toFixed(2)} 秒`;
-  $("resSub").innerHTML = `本轮最快 ${(best/1000).toFixed(2)} 秒　·　共 ${times.length} 题`
-    + (isBest ? `　·　<span class="newbest">★ 创下新纪录！</span>` : "");
+  $("resSub").textContent = `本轮最快 ${(best/1000).toFixed(2)} 秒　·　共 ${times.length} 题`;
 }
 
 /* ========= 按钮绑定 ========= */
@@ -622,32 +456,12 @@ $("btnSound").onclick = ()=>{
   toast(on ? "声音已开启" : "声音已关闭");
 };
 $("btnNoteChart").onclick = renderNoteChart;
-$("btnLeaderboard").onclick = renderLeaderboard;
-$("btnPickFile").onclick = pickFile;
-$("btnExport").onclick = ()=>{
-  const blob = new Blob([JSON.stringify(scores, null, 2)], {type:"application/json"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = "typing-scores-backup.json";
-  document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
-  toast("已导出备份文件");
-};
-$("btnReset").onclick = ()=>{
-  if(confirm("确定清空所有阶段的成绩记录吗？此操作不可撤销。")){
-    scores = {};
-    saveMirror();
-    if(fileHandle) persist();
-    toast("成绩已清空");
-    renderMenu();
-  }
-};
 $("btnAgain").onclick = ()=> startStage(current);
 $("btnBack").onclick = renderMenu;
 $("btnNext").onclick = ()=> startStage(current);
 $("btnResBack").onclick = renderMenu;
 
 /* ========= 启动 ========= */
+clearLegacyScores();
 renderMenu();
 updateSoundBtn();
-initFile();
