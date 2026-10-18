@@ -11,6 +11,7 @@ GitHub Actions secret `AZURE_STATIC_WEB_APPS_API_TOKEN_HEAVENREPO`.
 - **Time Together:** https://victorious-sky-06718e300.1.azurestaticapps.net/timezone/
 - **Typing game:** https://victorious-sky-06718e300.1.azurestaticapps.net/typing/
 - **Piano rhythm:** https://victorious-sky-06718e300.1.azurestaticapps.net/piano-rhythm/
+- **Jeep Rescue:** https://victorious-sky-06718e300.1.azurestaticapps.net/jeeprescue/
 
 This replaces the deleted `pages` deployment. The obsolete `xia` Azure site has
 also been deleted; its separate GitHub source repository is retained.
@@ -23,6 +24,7 @@ site/            Static site (Azure SWA app root)
   timezone/      World clocks + cross-timezone collaboration planner (Intl / ES Modules)
   typing/        A typing-practice web app (vanilla JS)
   piano-rhythm/  One-key piano rhythm game (ES Modules / Web Audio / Canvas)
+  jeeprescue/    Jackal-inspired jeep rescue game (ES Modules / Web Audio / Canvas)
 .github/         CI/CD workflows (Azure Static Web Apps)
 ```
 
@@ -39,6 +41,10 @@ site/            Static site (Azure SWA app root)
 - **Piano Rhythm** (`/piano-rhythm/`) — four public-domain melody arrangements,
   Space/mouse/touch input, precise timing judgments, combo effects and current-round
   results. See [the rhythm guide](site/piano-rhythm/README.md).
+- **Jeep Rescue · 赤色要塞** (`/jeeprescue/`) — Jackal-inspired top-down
+  rescue game: evacuate six soldiers, destroy the command tank and return to base.
+  Imported from the existing `jeeprescue` Azure deployment; all runtime assets
+  are hosted locally under `site/`. See [the game guide](site/jeeprescue/README.md).
 - **AI Efficiency V2** (`/ai-efficiency-v2/`) — interactive presentation.
 - **View HTML** (`/view-html/`) — offline ZIP presentation viewer.
 
@@ -58,10 +64,11 @@ Node.js 22.12+ and an installed Edge/Chrome browser are required:
 
 ```bash
 npm ci
-npm test             # rhythm/timezone unit tests + game/timezone browser checks
+npm test             # rhythm/timezone unit tests + game/timezone browser checks (including Jeep Rescue)
 npm run test:typing  # typing only
 npm run test:rhythm  # rhythm desktop + emulated touch
 npm run test:timezone # world clocks + collaboration planner desktop/mobile
+npm run test:jeeprescue # homepage entry + mission controls + local asset checks
 ```
 
 The test detects common browser locations; otherwise set `BROWSER_PATH` to the

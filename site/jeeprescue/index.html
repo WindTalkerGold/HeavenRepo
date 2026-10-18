@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172824">
+  <title>Jeep Rescue — Operation Greenlight</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./main.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="header">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">✚</span><div><h1>JEEP RESCUE<span class="edition"> / 01</span></h1><p>OPERATION GREENLIGHT <span>·</span> SOLO ARCADE</p></div></div>
+      <nav class="actions" aria-label="Game controls">
+        <button id="sound" aria-pressed="true" title="Toggle sound (M)">SOUND ON</button>
+        <button id="pause" title="Pause or resume (P / Escape)">PAUSE <kbd>P</kbd></button>
+        <button id="restart" title="Restart mission (R)">RESTART <kbd>R</kbd></button>
+      </nav>
+    </header>
+    <section class="dashboard" aria-label="Mission status">
+      <div class="armor-stat"><span class="stat-label">JEEP ARMOR</span><div class="armor-row"><div class="armor-track"><div id="armor-bar"></div></div><strong id="armor">100</strong><span>%</span></div></div>
+      <div><span class="stat-label">EVACUATED</span><strong class="stat-number"><span id="rescued">0</span><small> / 6</small></strong></div>
+      <div><span class="stat-label">PASSENGERS</span><strong class="stat-number"><span id="cargo">0</span><small> / 3</small></strong></div>
+      <div><span class="stat-label">GRENADES</span><strong id="grenades" class="stat-number">6</strong></div>
+      <div class="score-stat"><span class="stat-label">SCORE</span><strong id="score" class="stat-number">000000</strong></div>
+    </section>
+    <div class="play-layout">
+      <section class="game-frame" aria-label="Jeep rescue battlefield">
+        <canvas id="game" width="960" height="600" tabindex="0" aria-label="Battlefield. Move with WASD or arrow keys, fire with Space, throw grenades with X.">This game requires a browser with HTML Canvas support.</canvas>
+        <div class="mission-ribbon"><span class="live-dot"></span><span id="objective">MISSION READY</span><span id="clock">00:00</span></div>
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+        <div id="overlay" class="overlay">
+          <div class="briefing">
+            <span id="overlay-tag" class="eyebrow">FIELD BRIEFING / MISSION 01</span>
+            <h2 id="overlay-title">LEAVE NO<br><em>ONE BEHIND.</em></h2>
+            <p id="overlay-copy">Six soldiers are stranded beyond the river.<br>Take the jeep. Bring them home.</p>
+            <div id="briefing-goals" class="briefing-goals"><div><b>01</b><span>Rescue <strong>6 soldiers</strong><small>Drive close to pick them up. Three seats.</small></span></div><div><b>02</b><span>Destroy the <strong>command tank</strong><small>Head north. Grenades hit hard.</small></span></div><div><b>03</b><span>Return to <strong>extraction</strong><small>The green zone repairs and rearms you.</small></span></div></div>
+            <button id="start" class="primary">START MISSION <span>↗</span></button>
+            <p class="start-note" id="start-note">PRESS ENTER TO DEPLOY · NO DOWNLOADS, NO ACCOUNTS</p>
+          </div>
+        </div>
+        <div class="canvas-caption"><span>SECTOR 07 · RIVER VALLEY</span><span>TOP-DOWN RESCUE OPERATIONS</span></div>
+      </section>
+      <aside class="field-panel">
+        <div class="panel-heading"><span>TACTICAL MAP</span><span class="map-cross">⌖</span></div>
+        <canvas id="minimap" width="180" height="315" aria-label="Tactical map with soldiers, command tank, extraction, and jeep"></canvas>
+        <div class="map-key"><span><i class="key-soldier"></i>STRANDED</span><span><i class="key-base"></i>EXTRACTION</span><span><i class="key-enemy"></i>COMMAND</span></div>
+        <div class="field-note"><span class="eyebrow">DISPATCH</span><p id="dispatch">Stay on the road to find the bridge. Your machine gun never runs out.</p></div>
+        <div class="best-score"><span>PERSONAL BEST</span><strong id="best">000000</strong></div>
+      </aside>
+    </div>
+    <footer class="controls"><div><span class="control-icon">↔</span><span><b>DRIVE</b><small><kbd>W A S D</kbd> or <kbd>↑ ← ↓ →</kbd></small></span></div><div><span class="control-icon">⊕</span><span><b>FIRE</b><small><kbd>SPACE</kbd> / <kbd>Z</kbd> or hold click</small></span></div><div><span class="control-icon">✹</span><span><b>GRENADE</b><small><kbd>X</kbd> / <kbd>E</kbd> or right click</small></span></div><div><span class="control-icon">⌖</span><span><b>AIM</b><small>Face by driving, or point while clicking</small></span></div></footer>
+    <div class="bottom-line"><span>AN ORIGINAL JACKAL-INSPIRED MINI-GAME</span><span>BUILT FOR YOUR LAPTOP <span class="bottom-dot">●</span> OFFLINE READY</span></div>
+    <noscript>Please enable JavaScript to play.</noscript>
+  </main>
+</body>
+</html>
