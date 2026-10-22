@@ -81,7 +81,12 @@ async function main() {
     await page.goto(base, { waitUntil: "networkidle0" });
     await page.click('a[href="piano-rhythm/"]');
     await page.waitForSelector(".song-card");
-    assert.equal(await page.$$eval(".song-card", (nodes) => nodes.length), 4);
+    const cards = await page.$$eval(".song-card", (nodes) => nodes.length);
+    const declared = await page.evaluate(
+      async () => (await import("./js/songs.mjs")).SONGS.length,
+    );
+    assert.equal(cards, declared);
+    assert.ok(cards >= 12, "the library should ship a dozen arrangements");
     assert.equal(await page.$eval("#hit-pad", (node) => node.disabled), true);
     assert.equal(
       await page.evaluate(
@@ -119,6 +124,38 @@ async function main() {
     await page.waitForSelector('#stage[data-phase="playing"]');
     await page.waitForFunction(
       () => document.querySelector("#feedback strong").textContent === "MISS",
+    );
+    // The side metronome must actually paint, and its pendulum must move.
+    const gauge = () =>
+      page.$eval("#metronome-gauge", (node) => {
+        const { width, height } = node;
+        const data = node
+          .getContext("2d")
+          .getImageData(0, 0, width, height).data;
+        let ink = 0,
+          weight = 0,
+          sumX = 0;
+        const rows = Math.floor(height * 0.6);
+        for (let y = 0; y < rows; y++)
+          for (let x = 0; x < width; x++) {
+            const alpha = data[(y * width + x) * 4 + 3];
+            if (!alpha) continue;
+            ink++;
+            weight += alpha;
+            sumX += alpha * x;
+          }
+        return { width, ink, cx: weight ? sumX / weight : 0 };
+      });
+    const firstGauge = await gauge();
+    assert.ok(
+      firstGauge.width > 0 && firstGauge.ink > 150,
+      "metronome gauge draws a pendulum",
+    );
+    await delay(320);
+    const laterGauge = await gauge();
+    assert.ok(
+      Math.abs(laterGauge.cx - firstGauge.cx) > 2,
+      "pendulum keeps swinging",
     );
     await screenshot(page, "rhythm-desktop-playing");
     await page.evaluate(() => window.dispatchEvent(new Event("blur")));
@@ -172,16 +209,24 @@ async function main() {
     await mobile.touchscreen.touchStart(box.x, box.y);
     await delay(70);
     await mobile.touchscreen.touchEnd();
-    assert.match(
-      await mobile.$eval("#feedback strong", (node) => node.textContent),
-      /PERFECT|GOOD/,
-    );
+    // A real tap spends a few round trips after the count-in, so retry until the
+    // touch path reports an actual hit instead of assuming the first tap lands.
+    let mobileHit = await mobile.$eval("#feedback strong", (node) => node.textContent);
+    for (let i = 0; i < 8 && !/PERFECT|GOOD/.test(mobileHit); i++) {
+      await delay(90);
+      await mobile.touchscreen.touchStart(box.x, box.y);
+      await delay(70);
+      await mobile.touchscreen.touchEnd();
+      mobileHit = await mobile.$eval("#feedback strong", (node) => node.textContent);
+    }
+    assert.match(mobileHit, /PERFECT|GOOD/);
     assert.match(
       await mobile.$eval("#combo", (node) => node.textContent),
       /^1/,
     );
     await screenshot(mobile, "rhythm-mobile-playing");
-    // One more early tap is a wrong beat, with an explicit red/error state.
+    // Two taps in a row: the second one is a duplicate, i.e. a wrong beat.
+    await mobile.tap("#hit-pad");
     await mobile.tap("#hit-pad");
     assert.equal(
       await mobile.$eval("#hit-pad", (node) => node.dataset.judgment),
@@ -226,6 +271,22 @@ async function main() {
       ),
       false,
     );
+    assert.equal(
+      await mobile.$eval("#stage", (stage) => {
+        const rect = stage.getBoundingClientRect();
+        const panel = stage
+          .querySelector(".metronome-panel")
+          .getBoundingClientRect();
+        return (
+          panel.width > 30 &&
+          panel.left >= rect.left &&
+          panel.right <= rect.right &&
+          panel.top >= rect.top &&
+          panel.bottom <= rect.bottom
+        );
+      }),
+      true,
+    );
     // Older mobile engines must remain playable, not just render the HTML.
     // Removing APIs exercises the exact fallback paths on our installed Edge.
     const compatible = await browser.newPage();
@@ -253,8 +314,16 @@ async function main() {
     await compatible.waitForSelector('#stage[data-phase="countin"]');
     // If rendering throws, count-in never transitions to playing.
     await compatible.waitForSelector('#stage[data-phase="playing"]');
+    // A real tap costs a few CDP round trips, so it can land in the gap between
+    // two notes. Keep tapping until the input path reports an actual hit.
+    let hit = "";
+    for (let i = 0; i < 8 && !/PERFECT|GOOD/.test(hit); i++) {
+      await compatible.tap("#hit-pad");
+      hit = await compatible.$eval("#feedback strong", n => n.textContent);
+      if (!/PERFECT|GOOD/.test(hit)) await delay(90);
+    }
+    assert.match(hit, /PERFECT|GOOD/);
     await compatible.tap("#hit-pad");
-    assert.match(await compatible.$eval("#feedback strong", n => n.textContent), /PERFECT|GOOD/);
     await compatible.tap("#hit-pad");
     assert.equal(await compatible.$eval("#hit-pad", n => n.dataset.judgment), "stray");
     await compatible.tap("#pause");
@@ -303,7 +372,7 @@ async function main() {
 
     assert.deepEqual(errors, []);
     console.log(
-      "PASS: desktop Space, repeat protection, audio clock, pause/resume/blur, touch down, portrait fit, wrong/missed feedback, full result/retry, no history, missing mobile APIs, rejected pointer capture, audio timeout/retry, module failure notice.",
+      "PASS: desktop Space, repeat protection, audio clock, pause/resume/blur, touch down, portrait fit, wrong/missed feedback, full result/retry, no history, missing mobile APIs, rejected pointer capture, audio timeout/retry, module failure notice, swinging side metronome.",
     );
   } finally {
     if (browser) await browser.close();

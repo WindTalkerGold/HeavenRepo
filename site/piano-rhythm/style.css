@@ -164,9 +164,36 @@ h1 span {
   letter-spacing: 1.4px;
   color: var(--muted);
 }
+.song-scroller {
+  position: relative;
+}
+/* Scroll cue: the next card fades out instead of being cut by a hard edge. */
+.song-scroller::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 8px;
+  bottom: 0;
+  height: 26px;
+  background: linear-gradient(#10192300, #101923);
+  pointer-events: none;
+}
 .song-list {
   display: grid;
   gap: 9px;
+  max-height: min(56vh, 480px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #3b4d5b transparent;
+}
+.song-list::-webkit-scrollbar {
+  width: 8px;
+}
+.song-list::-webkit-scrollbar-thumb {
+  background: #3b4d5b;
+  border-radius: 4px;
 }
 .song-card {
   position: relative;
@@ -396,6 +423,18 @@ output {
   display: block;
   width: 100%;
   height: 100%;
+}
+.metronome-panel {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 76px;
+  height: 172px;
+  border: 1px solid #2c3f4b;
+  border-radius: 9px;
+  background: #0b151dcc;
+  pointer-events: none;
 }
 .lane-caption {
   position: absolute;
@@ -884,6 +923,10 @@ body:has(dialog[open]) {
   .stage {
     height: 310px;
   }
+  .metronome-panel {
+    width: 64px;
+    height: 146px;
+  }
 }
 @media (max-width: 680px) {
   .shell {
@@ -918,6 +961,12 @@ body:has(dialog[open]) {
   .song-list {
     grid-template-columns: 1fr 1fr;
     gap: 8px;
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+  .song-scroller::after {
+    display: none;
   }
   .song-card strong {
     font-size: 12px;
@@ -984,6 +1033,11 @@ body:has(dialog[open]) {
   }
   .stage {
     height: 270px;
+  }
+  .metronome-panel {
+    right: 6px;
+    width: 58px;
+    height: 126px;
   }
   .track-header h2 {
     font-size: 21px;
@@ -1067,6 +1121,11 @@ body:has(dialog[open]) {
   }
 }
 @media (max-width: 370px) {
+  .metronome-panel {
+    right: 4px;
+    width: 48px;
+    height: 110px;
+  }
   .intro-copy {
     display: none;
   }

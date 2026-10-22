@@ -17,7 +17,7 @@ const makeChart = () => ({
   })),
 });
 
-test("all four arrangements compile at every UI speed without mutating source data", () => {
+test("every arrangement compiles at every UI speed without mutating source data", () => {
   const before = JSON.stringify(SONGS);
   for (const song of SONGS)
     for (const speed of [0.75, 1, 1.25]) {

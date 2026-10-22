@@ -1,5 +1,8 @@
 {
   "mimeTypes": {
     ".mjs": "text/javascript"
+  },
+  "globalHeaders": {
+    "Cache-Control": "no-cache"
   }
 }

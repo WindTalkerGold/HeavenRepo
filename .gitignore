@@ -28,3 +28,6 @@ Thumbs.db
 
 # ---- Claude Code / agent local state ----
 .claude/settings.local.json
+
+# ---- Agent local state ----
+.workbuddy/

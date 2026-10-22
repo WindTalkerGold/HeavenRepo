@@ -1,11 +1,12 @@
 import { SONGS, compileSong } from "./songs.mjs";
 import { RhythmEngine } from "./engine.mjs";
 import { PianoTransport } from "./audio.mjs";
-import { TrackView, timeLabel } from "./view.mjs";
+import { TrackView, MetronomeView, timeLabel } from "./view.mjs";
 
 const $ = (id) => document.getElementById(id);
 const transport = new PianoTransport();
 const view = new TrackView($("track"));
+const metronome = new MetronomeView($("metronome-gauge"));
 let selected = SONGS[0];
 let chart = compileSong(selected);
 let engine = new RhythmEngine(chart);
@@ -33,6 +34,7 @@ for (const song of SONGS) {
   });
   $("songs").append(button);
 }
+$("song-count").textContent = `${SONGS.length} SELECTIONS`;
 
 function selectSong() {
   chart = compileSong(selected, Number($("speed").value));
@@ -94,7 +96,8 @@ function setPhase(next) {
   if (next === "ready") {
     $("cover-title").textContent = "让每一拍，刚刚好。";
     $("cover-copy").textContent = selected.description;
-    $("session-hint").textContent = "4 拍预备后开始 · 每个音符点一下，不用长按";
+    $("session-hint").textContent =
+      "4 拍预备后开始 · 右侧摆锤的每一次摆动就是一个拍点";
   } else if (next === "paused" || next === "pausing") {
     $("cover-title").textContent = "让旋律，等你一下。";
     $("cover-copy").textContent = "已暂停。点击「继续演奏」从原处继续。";
@@ -279,7 +282,8 @@ function frame(timestamp) {
     const judgedTime = time - offset;
     if (phase === "countin" && judgedTime >= 0) {
       setPhase("playing");
-      $("session-hint").textContent = "空格 / 点按下方节拍键 · Esc 或 P 暂停";
+      $("session-hint").textContent =
+        "空格 / 点按下方节拍键 · 摆锤到两端就是拍点 · Esc 或 P 暂停";
     }
     if (phase === "countin")
       $("count-value").textContent = Math.min(
@@ -293,7 +297,17 @@ function frame(timestamp) {
       finish();
     }
   }
-  view.draw(chart, engine.notes, time - (running ? offset : 0), running);
+  const drawnTime = time - (running ? offset : 0);
+  view.draw(chart, engine.notes, drawnTime, running);
+  metronome.draw(
+    chart,
+    drawnTime,
+    running
+      ? "playing"
+      : phase === "paused" || phase === "pausing"
+        ? "paused"
+        : "idle",
+  );
   requestAnimationFrame(frame);
 }
 

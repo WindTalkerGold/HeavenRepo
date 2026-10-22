@@ -14,8 +14,15 @@
     clearTimeout(timer);
     start.disabled = true;
     start.textContent = "游戏加载失败";
-    notice.textContent = "游戏初始化失败，请刷新页面或更新浏览器。错误：" +
-      (error.message || String(error));
+    var detail = error && error.message ? error.message : String(error);
+    // A module that fails to resolve its own exports almost always means the
+    // browser kept an old cached copy after the files were updated.
+    var splitCache = /does not provide an export|Failed to fetch dynamically imported module|Importing a module script failed/i.test(detail);
+    notice.textContent = "游戏初始化失败，" +
+      (splitCache
+        ? "请强制刷新页面（Ctrl / ⌘ + Shift + R）；仍失败请检查网络或更新浏览器。"
+        : "请刷新页面或更新浏览器。") +
+      "错误：" + detail;
     console.error("Piano Rhythm initialization failed:", error);
   });
 })();

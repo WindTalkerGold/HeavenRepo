@@ -2,6 +2,7 @@
   "name": "heavenrepo-checks",
   "private": true,
   "scripts": {
+    "serve": "node scripts/serve-site.cjs 8000",
     "test": "npm run test:unit && npm run test:typing && npm run test:rhythm && npm run test:timezone && npm run test:jeeprescue",
     "test:unit": "node --test scripts/rhythm-core.test.mjs scripts/timezone-core.test.mjs",
     "test:timezone": "node scripts/test-timezone.cjs",

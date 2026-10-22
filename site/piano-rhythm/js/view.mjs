@@ -25,6 +25,148 @@ function roundedRect(ctx, x, y, width, height, radius) {
   ctx.closePath();
 }
 
+// The pendulum is a real metronome: its extremes land exactly on the beats that
+// the falling notes are judged against, so sight and sound share one clock.
+export class MetronomeView {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.ctx = canvas.getContext("2d");
+    this.reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    if (typeof ResizeObserver === "function") {
+      this.resizeObserver = new ResizeObserver(() => this.resize());
+      this.resizeObserver.observe(canvas);
+    } else {
+      window.addEventListener("resize", () => this.resize());
+    }
+    this.resize();
+  }
+
+  resize() {
+    const box = this.canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if (this.width === box.width && this.height === box.height && this.dpr === dpr)
+      return;
+    this.width = box.width;
+    this.height = box.height;
+    this.dpr = dpr;
+    this.canvas.width = Math.round(box.width * dpr);
+    this.canvas.height = Math.round(box.height * dpr);
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  draw(chart, time, state = "idle") {
+    const c = this.ctx;
+    if (!this.resizeObserver) this.resize();
+    const w = this.width,
+      h = this.height;
+    if (!w || !h) return;
+    c.clearRect(0, 0, w, h);
+    const meter = chart.song.meter;
+    const beat = chart.beat;
+    const live = state === "playing" || state === "paused";
+    const accent = chart.song.color || "#eac88e";
+    const elapsed = live ? time : 0;
+    // Negative count-in values work with floor(): phase stays inside 0..1.
+    const index = Math.floor(elapsed / beat + 1e-9);
+    const phase = elapsed / beat - index;
+    const beatNo = ((index % meter) + meter) % meter;
+    const cx = w / 2,
+      pivotY = 12;
+    const arm = Math.max(30, h - 54);
+    const maxAngle = Math.min(
+      0.6,
+      Math.asin(Math.max(0.18, (w / 2 - 8) / arm)),
+    );
+    const angle = live ? maxAngle * Math.cos(Math.PI * phase) : 0;
+    const tipX = cx + Math.sin(angle) * arm;
+    const tipY = pivotY + Math.cos(angle) * arm;
+    const pulse = state === "playing" ? Math.max(0, 1 - phase * 2.2) : 0;
+    const glow = !this.reducedMotion.matches;
+
+    c.strokeStyle = "#8cbbc01f";
+    c.lineWidth = 1;
+    c.beginPath();
+    c.arc(cx, pivotY, arm * 0.98, Math.PI / 2 - maxAngle, Math.PI / 2 + maxAngle);
+    c.stroke();
+
+    if (pulse > 0.02 && glow) {
+      c.globalAlpha = pulse * 0.35;
+      c.strokeStyle = accent;
+      c.beginPath();
+      c.arc(cx, pivotY, 5 + phase * 15, 0, Math.PI * 2);
+      c.stroke();
+      c.globalAlpha = 1;
+    }
+
+    c.strokeStyle = live ? accent : "#7c8b96";
+    c.globalAlpha = live ? 0.95 : 0.55;
+    c.lineWidth = 2.5;
+    c.lineCap = "round";
+    if (pulse > 0.3 && glow) {
+      c.shadowColor = accent;
+      c.shadowBlur = 10;
+    }
+    c.beginPath();
+    c.moveTo(cx, pivotY);
+    c.lineTo(tipX, tipY);
+    c.stroke();
+    c.shadowBlur = 0;
+    c.globalAlpha = 1;
+
+    const weightX = cx + Math.sin(angle) * arm * 0.64;
+    const weightY = pivotY + Math.cos(angle) * arm * 0.64;
+    c.fillStyle = live ? accent : "#8b98a3";
+    c.beginPath();
+    c.arc(weightX, weightY, 4.4, 0, Math.PI * 2);
+    c.fill();
+
+    c.globalAlpha = 0.8;
+    c.beginPath();
+    c.arc(tipX, tipY, 1.6, 0, Math.PI * 2);
+    c.fill();
+    c.globalAlpha = 1;
+
+    c.fillStyle = "#33434f";
+    c.beginPath();
+    c.arc(cx, pivotY, 2.2, 0, Math.PI * 2);
+    c.fill();
+
+    const dotY = h - 28;
+    const gap = Math.min(12, (w - 8) / meter);
+    for (let i = 0; i < meter; i++) {
+      const x = cx + (i - (meter - 1) / 2) * gap;
+      const on = live && beatNo === i;
+      if (on) {
+        c.globalAlpha = 0.25;
+        c.fillStyle = accent;
+        c.beginPath();
+        c.arc(x, dotY, 5.4, 0, Math.PI * 2);
+        c.fill();
+        c.globalAlpha = 1;
+      }
+      c.fillStyle = on ? accent : "#41525e";
+      c.beginPath();
+      c.arc(x, dotY, on ? 3.6 : 2.4, 0, Math.PI * 2);
+      c.fill();
+    }
+
+    const bars = Math.max(1, Math.ceil(chart.totalBeats / meter));
+    const bar = Math.floor(index / meter) + 1;
+    c.fillStyle = "#8fa3b1";
+    c.font = "9px ui-monospace, Menlo, monospace";
+    c.textAlign = "center";
+    c.fillText(
+      !live
+        ? `${Math.round(chart.bpm)} BPM`
+        : bar < 1
+          ? "预备"
+          : `${String(Math.min(bars, bar)).padStart(2, "0")}/${String(bars).padStart(2, "0")}`,
+      cx,
+      h - 9,
+    );
+  }
+}
+
 export class TrackView {
   constructor(canvas) {
     this.canvas = canvas;

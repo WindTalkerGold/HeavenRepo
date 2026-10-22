@@ -50,9 +50,11 @@
           <aside class="library" aria-label="曲目与设置">
             <div class="section-heading">
               <h2>今日曲单</h2>
-              <span>4 SELECTIONS</span>
+              <span id="song-count">曲目加载中</span>
             </div>
-            <div id="songs" class="song-list"></div>
+            <div class="song-scroller">
+              <div id="songs" class="song-list"></div>
+            </div>
             <div class="settings">
               <div class="section-heading">
                 <h2>演奏设置</h2>
@@ -67,7 +69,7 @@
                 </select></label
               >
               <label class="setting-row" for="metronome"
-                ><span>演奏时的节拍器</span
+                ><span>节拍器提示音</span
                 ><input id="metronome" type="checkbox"
               /></label>
               <label class="offset-label" for="offset"
@@ -130,6 +132,9 @@
                 id="track"
                 aria-label="音符向下移动，抵达金色判定线时点按一次。长音也只需点按一次。"
               ></canvas>
+              <aside class="metronome-panel" aria-hidden="true">
+                <canvas id="metronome-gauge"></canvas>
+              </aside>
               <div class="lane-caption">
                 <span>SINGLE KEY · SINGLE MOMENT</span
                 ><span id="note-count"></span>
@@ -190,7 +195,9 @@
             <span class="guide-number">01</span>
             <p>
               <strong>先听，再落指</strong
-              ><span>金线是时机，不是看见音符就按。空白处是休止。</span>
+              ><span
+                >金线是判定时机；右侧摆锤摆到两端，就是一拍。空白处是休止。</span
+              >
             </p>
           </div>
           <div>
@@ -210,7 +217,7 @@
         </section>
       </main>
       <footer>
-        FOUR FAMILIAR MELODIES. ONE LITTLE KEY.<span
+        FAMILIAR MELODIES. ONE LITTLE KEY.<span
           >没有排行榜，只有这一刻的节奏。</span
         >
       </footer>
